@@ -27,7 +27,8 @@ class SpecRulesFrame(ctk.CTkFrame):
         left = ctk.CTkFrame(self)
         left.grid(row=0, column=0, rowspan=4, sticky="nsew", padx=10, pady=10)
         left.grid_columnconfigure(0, weight=1)
-        left.grid_rowconfigure(1, weight=1)
+        left.grid_columnconfigure(1, weight=0)
+        left.grid_rowconfigure(2, weight=1)
 
         ctk.CTkLabel(left, text="搜尋 Class").grid(row=0, column=0, sticky="ew", padx=8, pady=(8, 2))
         self.class_search_entry = ctk.CTkEntry(left)
@@ -37,6 +38,10 @@ class SpecRulesFrame(ctk.CTkFrame):
         self.class_list = tk.Listbox(left, width=24)
         self.class_list.grid(row=2, column=0, sticky="nsew", padx=8, pady=(0, 8))
         self.class_list.bind("<<ListboxSelect>>", self._on_select_class)
+
+        class_scroll = ttk.Scrollbar(left, orient="vertical", command=self.class_list.yview)
+        class_scroll.grid(row=2, column=1, sticky="ns", padx=(0, 8), pady=(0, 8))
+        self.class_list.configure(yscrollcommand=class_scroll.set)
 
         right = ctk.CTkFrame(self)
         right.grid(row=0, column=1, rowspan=4, sticky="nsew", padx=(0, 10), pady=10)
@@ -57,9 +62,10 @@ class SpecRulesFrame(ctk.CTkFrame):
         self.weld_type_entry = ctk.CTkEntry(right)
         self.weld_type_entry.grid(row=2, column=1, sticky="ew", padx=8, pady=2)
 
-        ctk.CTkLabel(right, text="thk candidates (DN / 區段)").grid(
-            row=3, column=0, columnspan=2, sticky="w", padx=8, pady=(8, 4)
-        )
+        ctk.CTkLabel(right, text="thk candidates (DN / 區段)").grid(row=3, column=0, sticky="w", padx=8, pady=(8, 4))
+        self.thk_mode_var = tk.BooleanVar(value=True)
+        self.thk_mode_switch = ctk.CTkSwitch(right, text="限制 THK（Schedule）", variable=self.thk_mode_var)
+        self.thk_mode_switch.grid(row=3, column=1, sticky="e", padx=8, pady=(8, 4))
 
         table_wrap = ctk.CTkFrame(right)
         table_wrap.grid(row=4, column=0, columnspan=2, sticky="nsew", padx=8, pady=4)
@@ -86,21 +92,13 @@ class SpecRulesFrame(ctk.CTkFrame):
         self.thk_entry = ctk.CTkEntry(thk_editor)
         self.thk_entry.grid(row=0, column=3, padx=4, pady=4, sticky="ew")
 
-        ctk.CTkButton(thk_editor, text="新增/更新DN規則", command=self._upsert_dn_rule).grid(
-            row=0, column=4, padx=4, pady=4
-        )
-        ctk.CTkButton(thk_editor, text="刪除選取DN", command=self._delete_dn_rule).grid(
-            row=0, column=5, padx=4, pady=4
-        )
-        ctk.CTkButton(thk_editor, text="套用到全部 DN", command=self._apply_to_all_dn).grid(
-            row=1, column=4, padx=4, pady=4
-        )
-        ctk.CTkButton(thk_editor, text="複製上一筆", command=self._copy_selected_rule).grid(
-            row=1, column=5, padx=4, pady=4
-        )
-        ctk.CTkButton(thk_editor, text="快速建立區段", command=self._quick_add_ranges).grid(
-            row=1, column=6, padx=4, pady=4
-        )
+        toolbar = ctk.CTkFrame(thk_editor, fg_color="transparent")
+        toolbar.grid(row=1, column=0, columnspan=4, sticky="ew", padx=4, pady=(0, 4))
+        ctk.CTkButton(toolbar, text="新增/更新DN規則", command=self._upsert_dn_rule).pack(side="left", padx=4, pady=4)
+        ctk.CTkButton(toolbar, text="刪除選取DN", command=self._delete_dn_rule).pack(side="left", padx=4, pady=4)
+        ctk.CTkButton(toolbar, text="套用到全部 DN", command=self._apply_to_all_dn).pack(side="left", padx=4, pady=4)
+        ctk.CTkButton(toolbar, text="複製上一筆", command=self._copy_selected_rule).pack(side="left", padx=4, pady=4)
+        ctk.CTkButton(toolbar, text="快速建立區段", command=self._quick_add_ranges).pack(side="left", padx=4, pady=4)
 
         btn_row = ctk.CTkFrame(self)
         btn_row.grid(row=4, column=0, columnspan=2, sticky="ew", padx=10, pady=(0, 10))
@@ -141,6 +139,7 @@ class SpecRulesFrame(ctk.CTkFrame):
         self.weld_type_entry.delete(0, tk.END)
         self.dn_entry.delete(0, tk.END)
         self.thk_entry.delete(0, tk.END)
+        self.thk_mode_var.set(True)
         for item in self.thk_tree.get_children():
             self.thk_tree.delete(item)
 
@@ -190,8 +189,22 @@ class SpecRulesFrame(ctk.CTkFrame):
 
         self.weld_type_entry.delete(0, tk.END)
         self.weld_type_entry.insert(0, rule.get("default_weld_type", ""))
+        self.thk_mode_var.set(rule.get("thk_mode", "restricted") == "restricted")
+
+        self.thk_entry.delete(0, tk.END)
+        self.thk_entry.insert(0, ", ".join(rule.get("default_thk_candidates", [])))
 
         self._reload_thk_tree(class_code)
+
+    def _effective_thk_input(self) -> List[str]:
+        thk_list = self._parse_thk_list()
+        if thk_list:
+            return thk_list
+        class_code = self.class_entry.get().strip().upper()
+        if not class_code:
+            return []
+        rule = self._working_rules.get(class_code, {})
+        return list(rule.get("default_thk_candidates", []))
 
     def _reload_thk_tree(self, class_code: str) -> None:
         rule = self._working_rules.get(class_code, {})
@@ -213,7 +226,7 @@ class SpecRulesFrame(ctk.CTkFrame):
             return
 
         dn_text = self.dn_entry.get().strip()
-        thk_list = self._parse_thk_list()
+        thk_list = self._effective_thk_input()
         if not thk_list:
             messagebox.showerror("格式錯誤", "THK 候選不可為空")
             return
@@ -298,6 +311,7 @@ class SpecRulesFrame(ctk.CTkFrame):
             messagebox.showerror("格式錯誤", "THK 候選不可為空")
             return
         rule = self._working_rules[class_code]
+        rule["default_thk_candidates"] = list(thk_list)
         for dn in list(rule.get("thk_candidates_by_dn", {}).keys()):
             rule["thk_candidates_by_dn"][dn] = thk_list
         for item in rule.get("thk_rules", []):
@@ -309,7 +323,7 @@ class SpecRulesFrame(ctk.CTkFrame):
         if not class_code:
             messagebox.showwarning("提示", "請先指定 Class Code")
             return
-        thk_list = self._parse_thk_list()
+        thk_list = self._effective_thk_input()
         if not thk_list:
             messagebox.showerror("格式錯誤", "請先輸入 THK 列表後再快速建立區段")
             return
@@ -381,6 +395,8 @@ class SpecRulesFrame(ctk.CTkFrame):
             "thk_candidates_by_dn": copy.deepcopy(base_rule.get("thk_candidates_by_dn", {})),
             "thk_rules": copy.deepcopy(base_rule.get("thk_rules", [])),
             "default_weld_type": self.weld_type_entry.get().strip(),
+            "thk_mode": "restricted" if self.thk_mode_var.get() else "unrestricted",
+            "default_thk_candidates": copy.deepcopy(base_rule.get("default_thk_candidates", [])),
         }
 
         if self._active_class and self._active_class != class_code:
@@ -407,6 +423,8 @@ class SpecRulesFrame(ctk.CTkFrame):
             "thk_candidates_by_dn": base_rule.get("thk_candidates_by_dn", {}),
             "thk_rules": base_rule.get("thk_rules", []),
             "default_weld_type": self.weld_type_entry.get().strip(),
+            "thk_mode": "restricted" if self.thk_mode_var.get() else "unrestricted",
+            "default_thk_candidates": base_rule.get("default_thk_candidates", []),
         }
         existing_rule = self._working_rules.get(class_code)
         if existing_rule is None:
@@ -414,7 +432,14 @@ class SpecRulesFrame(ctk.CTkFrame):
         return rules.normalize_rules({"_": current_rule})["_"] != rules.normalize_rules({"_": existing_rule})["_"]
 
     def _validate_and_collect(self) -> Dict[str, Dict]:
-        return rules.normalize_rules(self._working_rules)
+        normalized = rules.normalize_rules(self._working_rules)
+        for class_code, rule in normalized.items():
+            if rule.get("thk_mode") != "restricted":
+                continue
+            has_rules = bool(rule.get("thk_candidates_by_dn")) or bool(rule.get("thk_rules"))
+            if not has_rules:
+                raise ValueError(f"{class_code} 啟用 THK 限制時，必須至少有一筆 DN/Range 規則")
+        return normalized
 
     def _save(self) -> None:
         class_code = self._persist_form_to_working()

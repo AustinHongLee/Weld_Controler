@@ -53,7 +53,7 @@ def get_thk_candidates_for_dn(rules: Dict[str, Any], class_code: str, dn_int: in
             continue
         if dn_min <= dn_int <= dn_max:
             return [str(v).strip() for v in item.get("thk", []) if str(v).strip()]
-    return []
+    return [str(v).strip() for v in rule.get("default_thk_candidates", []) if str(v).strip()]
 
 
 def normalize_rules(rules: Dict[str, Any]) -> Dict[str, Any]:
@@ -94,6 +94,15 @@ def normalize_rules(rules: Dict[str, Any]) -> Dict[str, Any]:
                 thk_rules.append({"dn_min": dn_min, "dn_max": dn_max, "thk": thk_values})
         thk_rules.sort(key=lambda row: (row["dn_min"], row["dn_max"]))
 
+        default_thk_candidates = _dedup_clean_list(rule.get("default_thk_candidates", [])) if isinstance(rule, dict) else []
+
+        has_existing_thk = bool(by_dn) or bool(thk_rules)
+        mode_raw = str(rule.get("thk_mode", "")).strip().lower() if isinstance(rule, dict) else ""
+        if mode_raw in {"restricted", "unrestricted"}:
+            thk_mode = mode_raw
+        else:
+            thk_mode = "restricted" if has_existing_thk else "unrestricted"
+
         normalized[key] = {
             "material_candidates": mats,
             "thk_candidates_by_dn": by_dn,
@@ -101,6 +110,8 @@ def normalize_rules(rules: Dict[str, Any]) -> Dict[str, Any]:
             "default_weld_type": str(rule.get("default_weld_type", "")).strip()
             if isinstance(rule, dict)
             else "",
+            "thk_mode": thk_mode,
+            "default_thk_candidates": default_thk_candidates,
         }
     return normalized
 
