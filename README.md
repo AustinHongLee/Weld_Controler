@@ -17,8 +17,9 @@ python app.py
 ## 使用流程
 
 1. 匯入 DWG 清單（貼上或讀取 TXT）。
-2. 選擇 DWG 後建立焊口明細（批量生成/貼上，必要時套用 defaults）。
-3. 匯出 Excel（輸出於 `output/`）。
+2. 若需調整候選規則，可在「Spec Rules 管理」頁籤維護 `class -> 材質候選 / DN厚度候選 / 預設焊接型式`。
+3. 選擇 DWG 後建立焊口明細（批量生成/貼上，必要時套用 defaults）。
+4. 匯出 Excel（輸出於 `output/`）。
 
 ## 設定檔
 

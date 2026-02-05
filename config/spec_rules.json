@@ -1,16 +1,35 @@
 {
   "AA2B": {
-    "material_candidates": ["C.S", "SS304", "SS316"],
+    "material_candidates": [
+      "C.S",
+      "SS304",
+      "SS316"
+    ],
     "thk_candidates_by_dn": {
-      "15": ["S-40", "S-80"],
-      "25": ["S-40", "S-80"],
-      "50": ["S-40", "S-80"],
-      "65": ["S-40", "S-80"]
+      "15": [
+        "S-40",
+        "S-80"
+      ],
+      "25": [
+        "S-40",
+        "S-80"
+      ],
+      "50": [
+        "S-40",
+        "S-80"
+      ],
+      "65": [
+        "S-40",
+        "S-80"
+      ]
     },
     "default_weld_type": "FSW"
   },
   "AA1E": {
-    "material_candidates": ["SS304", "SS316"],
+    "material_candidates": [
+      "SS304",
+      "SS316"
+    ],
     "thk_candidates_by_dn": {},
     "default_weld_type": "FSW"
   }

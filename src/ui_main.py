@@ -10,6 +10,7 @@ from src.ui_dwg_import import DwgImportFrame
 from src.ui_export import ExportFrame
 from src.ui_parser_profile import ParserProfileFrame
 from src.ui_weld_editor import WeldEditorFrame
+from src.ui_spec_rules import SpecRulesFrame
 
 
 class AppController:
@@ -123,6 +124,13 @@ class AppController:
     def export_project(self, output_dir: str) -> str:
         return export_excel.export_welds(self.project, output_dir)
 
+    def reload_spec_rules(self) -> None:
+        self.spec_rules = rules.load_spec_rules(self.rules_path)
+
+    def save_spec_rules(self, spec_rules_data: Dict[str, Any]) -> None:
+        rules.save_spec_rules(self.rules_path, spec_rules_data)
+        self.spec_rules = spec_rules_data
+
 
 class MainApp(ctk.CTk):
     def __init__(self, controller: AppController) -> None:
@@ -160,6 +168,7 @@ class MainApp(ctk.CTk):
 
         tab_import = self.tabview.add("匯入/管理 DWG")
         tab_welds = self.tabview.add("焊口建立/編輯")
+        tab_spec_rules = self.tabview.add("Spec Rules 管理")
         tab_export = self.tabview.add("匯出 Excel")
 
         self.dwg_import_frame = DwgImportFrame(
@@ -182,6 +191,11 @@ class MainApp(ctk.CTk):
             on_update=self.refresh_drawings,
         )
         self.weld_editor_frame.pack(fill="both", expand=True)
+
+        self.spec_rules_frame = SpecRulesFrame(
+            tab_spec_rules, controller=self.controller, on_saved=self.weld_editor_frame.refresh
+        )
+        self.spec_rules_frame.pack(fill="both", expand=True)
 
         self.export_frame = ExportFrame(tab_export, controller=self.controller)
         self.export_frame.pack(fill="both", expand=True)
