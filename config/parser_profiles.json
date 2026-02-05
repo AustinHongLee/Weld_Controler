@@ -1,0 +1,13 @@
+{
+  "default": {
+    "delimiter": "-",
+    "mapping": [
+      "system",
+      "drawing_no",
+      "dn",
+      "class",
+      "insulation",
+      "sheet"
+    ]
+  }
+}
