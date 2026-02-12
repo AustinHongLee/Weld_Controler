@@ -36,6 +36,24 @@ def get_default_weld_type(rules: Dict[str, Any], class_code: str) -> str:
     return str(rule.get("default_weld_type", ""))
 
 
+def get_default_material(
+    rules: Dict[str, Any], class_code: str
+) -> str:
+    """Return default material for a pipe class.
+
+    Falls back to first material_candidate if no explicit
+    default_material is set.
+    """
+    rule = rules.get(class_code, {})
+    dm = rule.get("default_material", "")
+    if dm:
+        return str(dm)
+    candidates = rule.get("material_candidates", [])
+    if candidates:
+        return str(candidates[0])
+    return ""
+
+
 def get_thk_candidates_for_dn(rules: Dict[str, Any], class_code: str, dn_int: int) -> List[str]:
     rule = rules.get(class_code, {})
     by_dn = rule.get("thk_candidates_by_dn", {})

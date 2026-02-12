@@ -1,32 +1,66 @@
+"""Export tab — Excel / future format export."""
 from __future__ import annotations
 
-import threading
 import traceback
-from tkinter import messagebox
 
-import customtkinter as ctk
+from PyQt6.QtWidgets import (
+    QFileDialog,
+    QGroupBox,
+    QLabel,
+    QMessageBox,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
+
+from src.controller import AppController
 
 
-class ExportFrame(ctk.CTkFrame):
-    def __init__(self, parent, controller) -> None:
+class ExportWidget(QWidget):
+    """Simple panel to trigger project export to Excel."""
+
+    def __init__(
+        self, controller: AppController, parent=None
+    ) -> None:
         super().__init__(parent)
-        self.controller = controller
+        self.ctrl = controller
 
-        self.status_label = ctk.CTkLabel(self, text="")
-        self.status_label.pack(anchor="w", padx=10, pady=(10, 4))
+        layout = QVBoxLayout(self)
 
-        ctk.CTkButton(self, text="匯出 Excel", command=self._export).pack(
-            padx=10, pady=10, anchor="w"
+        group = QGroupBox("匯出 Excel")
+        g_layout = QVBoxLayout(group)
+
+        g_layout.addWidget(
+            QLabel(
+                "匯出兩張工作表：\n"
+                "  Sheet 1 — Drawing List (母表)\n"
+                "  Sheet 2 — Weld Control (子表)"
+            )
         )
 
-    def _export(self) -> None:
-        def task() -> None:
-            try:
-                path = self.controller.export_project("output")
-                self.after(0, lambda: self.status_label.configure(text=f"已輸出: {path}"))
-                self.after(0, lambda: messagebox.showinfo("完成", f"匯出完成: {path}"))
-            except Exception:  # noqa: BLE001
-                summary = traceback.format_exc()
-                self.after(0, lambda: messagebox.showerror("匯出失敗", summary))
+        export_btn = QPushButton("選擇目錄並匯出")
+        export_btn.clicked.connect(self._export)
+        g_layout.addWidget(export_btn)
 
-        threading.Thread(target=task, daemon=True).start()
+        self.result_label = QLabel("")
+        g_layout.addWidget(self.result_label)
+
+        layout.addWidget(group)
+        layout.addStretch()
+
+    def _export(self) -> None:
+        out_dir = QFileDialog.getExistingDirectory(
+            self, "選擇匯出目錄"
+        )
+        if not out_dir:
+            return
+        try:
+            path = self.ctrl.export_project(out_dir)
+            self.result_label.setText(f"已匯出: {path}")
+            QMessageBox.information(
+                self, "完成", f"檔案已匯出至:\n{path}"
+            )
+        except Exception:
+            QMessageBox.critical(
+                self, "匯出失敗", traceback.format_exc()
+            )

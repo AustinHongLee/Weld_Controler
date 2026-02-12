@@ -5,9 +5,9 @@
       "system",
       "drawing_no",
       "dn",
-      "class",
+      "pipe_class",
       "insulation",
-      "sheet"
+      "sheet_no"
     ]
   }
 }

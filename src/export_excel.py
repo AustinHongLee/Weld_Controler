@@ -1,52 +1,50 @@
+"""Export project data to Excel."""
 from __future__ import annotations
 
 import os
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any  # noqa: F401 – kept for future use
 
 from openpyxl import Workbook
 
-
-HEADERS = [
-    "流水號",
-    "DWG NO",
-    "銲口編號",
-    "尺寸",
-    "厚度",
-    "材質",
-    "銲接型式",
-    "預製S/現場F",
-    "備註",
-]
+from src.models import (
+    DRAWING_HEADERS,
+    DRAWING_KEYS,
+    Project,
+    WELD_HEADERS,
+    WELD_KEYS,
+)
 
 
-def export_welds(project: Dict[str, Any], output_dir: str) -> str:
+def export_project(project: Project, output_dir: str) -> str:
+    """Export two sheets: Drawing List + Weld Control."""
     os.makedirs(output_dir, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-    filename = f"焊口編號明細_{timestamp}.xlsx"
+    ts = datetime.now().strftime("%Y%m%d_%H%M")
+    name = project.meta.get("project_name", "") or "project"
+    filename = f"{name}_export_{ts}.xlsx"
     path = os.path.join(output_dir, filename)
 
-    workbook = Workbook()
-    sheet = workbook.active
-    sheet.append(HEADERS)
+    wb = Workbook()
 
-    for drawing in project.get("drawings", []):
-        serial = drawing.get("serial", "")
-        dwg_no = drawing.get("dwg_no", "")
-        for weld in drawing.get("welds", []):
-            sheet.append(
-                [
-                    serial,
-                    dwg_no,
-                    weld.get("weld_no", ""),
-                    weld.get("dn", ""),
-                    weld.get("thk", ""),
-                    weld.get("material", ""),
-                    weld.get("weld_type", ""),
-                    weld.get("shop_field", ""),
-                    weld.get("remark", ""),
-                ]
-            )
+    # ── Sheet 1: Drawing List ────────────────────────────
+    ws_dwg = wb.active
+    ws_dwg.title = "Drawing List"
+    headers = DRAWING_HEADERS + ["最終版版次", "最終版日期"]
+    ws_dwg.append(headers)
+    for dw in project.drawings:
+        row = [dw.get(k) for k in DRAWING_KEYS]
+        row += [dw.final_rev, dw.final_rev_date]
+        ws_dwg.append(row)
 
-    workbook.save(path)
+    # ── Sheet 2: Weld Control ────────────────────────────
+    ws_weld = wb.create_sheet("Weld Control")
+    weld_headers = ["流水號", "DWG NO", "SH'T NO"] + WELD_HEADERS
+    ws_weld.append(weld_headers)
+    for dw in project.drawings:
+        for w in dw.welds:
+            row = [dw.series_no, dw.dwg_no, dw.sheet_no]
+            row += [getattr(w, k, "") for k in WELD_KEYS]
+            ws_weld.append(row)
+
+    wb.save(path)
     return path

@@ -1,0 +1,17 @@
+{
+  "AC": "壓縮空氣 Compressed Air",
+  "BW": "鍋爐給水 Boiler Feed Water",
+  "CW": "冷卻水 Cooling Water",
+  "DR": "排水 Drain",
+  "FG": "燃料氣 Fuel Gas",
+  "FO": "燃料油 Fuel Oil",
+  "IA": "儀器空氣 Instrument Air",
+  "LO": "潤滑油 Lube Oil",
+  "MS": "主蒸汽 Main Steam",
+  "NG": "天然氣 Natural Gas",
+  "PA": "廠用空氣 Plant Air",
+  "PW": "製程水 Process Water",
+  "SS": "蒸汽 Steam",
+  "VT": "通風 Vent",
+  "WW": "廢水 Waste Water"
+}

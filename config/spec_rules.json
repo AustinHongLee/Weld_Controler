@@ -5,6 +5,7 @@
       "SS304",
       "SS316"
     ],
+    "default_material": "C.S",
     "thk_candidates_by_dn": {
       "15": [
         "S-40",
@@ -30,6 +31,7 @@
       "SS304",
       "SS316"
     ],
+    "default_material": "SS304",
     "thk_candidates_by_dn": {},
     "default_weld_type": "FSW"
   }
