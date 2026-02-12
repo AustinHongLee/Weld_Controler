@@ -442,6 +442,7 @@ class DrawingEditDialog(QDialog):
         grid = QGridLayout(form_widget)
 
         self.fields: Dict[str, QLineEdit] = {}
+        self.combos: Dict[str, QComboBox] = {}
         cols_per_row = 4
         col = 0
         row_idx = 0
@@ -449,11 +450,21 @@ class DrawingEditDialog(QDialog):
             r = row_idx * 2
             c = col
             grid.addWidget(QLabel(header), r, c)
-            le = QLineEdit()
-            if dw:
-                le.setText(dw.get(key))
-            grid.addWidget(le, r + 1, c)
-            self.fields[key] = le
+            if key == "dwg_status":
+                cb = QComboBox()
+                cb.addItems(["啟用", "關閉"])
+                if dw:
+                    cb.setCurrentText(
+                        dw.get(key) or "啟用"
+                    )
+                grid.addWidget(cb, r + 1, c)
+                self.combos[key] = cb
+            else:
+                le = QLineEdit()
+                if dw:
+                    le.setText(dw.get(key))
+                grid.addWidget(le, r + 1, c)
+                self.fields[key] = le
             col += 1
             if col >= cols_per_row:
                 col = 0
@@ -480,6 +491,8 @@ class DrawingEditDialog(QDialog):
             k: le.text()
             for k, le in self.fields.items()
         }
+        for k, cb in self.combos.items():
+            data[k] = cb.currentText()
         self.ctrl.update_drawing(self.idx, data)
         self.accept()
 

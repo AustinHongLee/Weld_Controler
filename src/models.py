@@ -13,7 +13,6 @@ DRAWING_FIELDS: List[tuple] = [
     ("dwg_no",          "DWG NO",         False),
     ("sheet_no",        "SH'T NO",        False),
     ("line_no",         "Line_No",        False),
-    ("line_number",     "LINE NUMBER",    False),
     ("area",            "區域",           False),
     ("delivery_date",   "運交現場日期",    False),
     ("install_billing", "安裝請款",        False),
@@ -25,9 +24,7 @@ DRAWING_FIELDS: List[tuple] = [
     ("insulation",      "保溫",           True),
     # --- continued manual fields ---
     ("material",        "管線材質",        False),
-    ("scope",           "範圍(NEW)",      False),
     ("remark",          "備註",           False),
-    ("dwg_label",       "圖號",           False),
     ("sys_number",      "系統+編號",      False),
     ("pwht",            "退火",           False),
     ("design_pressure", "設計壓力Kg/cm²", False),
@@ -39,8 +36,6 @@ DRAWING_FIELDS: List[tuple] = [
     ("prefab_dwg",      "預製圖",         False),
     ("equipment_no",    "設備編號",        False),
     ("paint_color",     "面漆顏色",        False),
-    ("pipe_no",         "管線號",         False),
-    ("model_3d",        "3D_JSON",        False),
     ("dwg_status",      "圖面狀態",        False),
 ]
 
@@ -115,9 +110,8 @@ class Drawing:
     # --- identity ---
     series_no: str = ""
     dwg_no: str = ""
-    sheet_no: str = ""
+    sheet_no: str = "1"
     line_no: str = ""
-    line_number: str = ""
     # --- management ---
     area: str = ""
     delivery_date: str = ""
@@ -130,9 +124,7 @@ class Drawing:
     insulation: str = ""
     # --- engineering ---
     material: str = ""
-    scope: str = ""
     remark: str = ""
-    dwg_label: str = ""
     sys_number: str = ""
     pwht: str = ""
     design_pressure: str = ""
@@ -144,9 +136,7 @@ class Drawing:
     prefab_dwg: str = ""
     equipment_no: str = ""
     paint_color: str = ""
-    pipe_no: str = ""
-    model_3d: str = ""
-    dwg_status: str = ""
+    dwg_status: str = "啟用"
     # --- child data ---
     revisions: List[Revision] = field(default_factory=list)
     welds: List[Weld] = field(default_factory=list)

@@ -130,6 +130,9 @@ class AppController:
         # Handle sheet_no that might still come separately
         if "sheet_no" in parsed and not dw.sheet_no:
             dw.sheet_no = parsed["sheet_no"]
+        # Default sheet_no to "1" if still empty
+        if not dw.sheet_no:
+            dw.sheet_no = "1"
         # Compose sys_number automatically
         if dw.system and dw.drawing_no:
             dw.sys_number = f"{dw.system}-{dw.drawing_no}"
