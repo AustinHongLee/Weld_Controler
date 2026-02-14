@@ -2,7 +2,7 @@
   "meta": {
     "project_name": "",
     "created_at": "2024-01-01T00:00:00+00:00",
-    "updated_at": "2026-02-14T10:59:30.595448+00:00",
+    "updated_at": "2026-02-14T12:39:05.138592+00:00",
     "parser_profile": "default"
   },
   "drawings": [
@@ -904,7 +904,53 @@
       "paint_color": "",
       "dwg_status": "啟用",
       "revisions": [],
-      "welds": []
+      "welds": [
+        {
+          "weld_no": "W1",
+          "dn": "65",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "W2",
+          "dn": "65",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "W3",
+          "dn": "65",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "W4",
+          "dn": "65",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "W5",
+          "dn": "65",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW",
+          "shop_field": "S",
+          "remark": ""
+        }
+      ]
     },
     {
       "series_no": "31",

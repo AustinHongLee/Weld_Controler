@@ -255,6 +255,91 @@ class SpecRulesWidget(QWidget):
 
         self.tabs.addTab(tab4, "管材 & 壁厚")
 
+        # ── Tab 5: 支管表 (Branch Table) ─────────
+        tab5 = QWidget()
+        t5 = QVBoxLayout(tab5)
+
+        # quick-fill toolbar
+        bf = QHBoxLayout()
+        bf.addWidget(QLabel("快填:"))
+
+        btn_auto_br = QPushButton("自動填充 (依DN門檻)")
+        btn_auto_br.setToolTip(
+            "對角線→等徑三通, 小口徑→SOC/ETE/RTE, "
+            "大口徑→RWE/TER/TEE/RPA"
+        )
+        btn_auto_br.clicked.connect(self._branch_auto_fill)
+        bf.addWidget(btn_auto_br)
+
+        btn_clear_br = QPushButton("清除全部")
+        btn_clear_br.clicked.connect(self._branch_clear)
+        bf.addWidget(btn_clear_br)
+
+        bf.addStretch()
+        t5.addLayout(bf)
+
+        # scrollable DN × DN matrix (QComboBox cells)
+        br_scroll = QScrollArea()
+        br_scroll.setWidgetResizable(True)
+        br_matrix_w = QWidget()
+        self._br_grid = QGridLayout(br_matrix_w)
+        self._br_grid.setSpacing(1)
+
+        self._br_fitting_types: List[str] = (
+            [""] + self._common.get(
+                "branch_fitting_types",
+                ["SOC", "ETE", "RTE", "RWE",
+                 "TER", "TEE", "RPA"],
+            )
+        )
+        # {(header_dn, branch_dn): QComboBox}
+        self._br_cbs: Dict[tuple, QComboBox] = {}
+
+        # corner label
+        corner = QLabel("H \\ B")
+        corner.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        corner.setStyleSheet(
+            "font-size: 10px; font-weight: bold;"
+        )
+        self._br_grid.addWidget(corner, 0, 0)
+
+        # header row — branch DN labels
+        for ci, bdn in enumerate(self._dn_list):
+            lbl = QLabel(bdn)
+            lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            lbl.setStyleSheet(
+                "font-size: 10px; font-weight: bold;"
+            )
+            lbl.setFixedWidth(48)
+            self._br_grid.addWidget(lbl, 0, ci + 1)
+
+        # rows — header DN + combo cells
+        for ri, hdn in enumerate(self._dn_list):
+            h_lbl = QLabel(hdn)
+            h_lbl.setStyleSheet(
+                "font-weight: bold; min-width: 36px;"
+            )
+            self._br_grid.addWidget(h_lbl, ri + 1, 0)
+            hdn_int = int(hdn)
+            for ci, bdn in enumerate(self._dn_list):
+                bdn_int = int(bdn)
+                if bdn_int > hdn_int:
+                    # branch > header → invalid cell
+                    continue
+                cb = QComboBox()
+                cb.setFixedWidth(48)
+                cb.addItems(self._br_fitting_types)
+                cb.setStyleSheet("font-size: 10px;")
+                self._br_cbs[(hdn, bdn)] = cb
+                self._br_grid.addWidget(
+                    cb, ri + 1, ci + 1
+                )
+
+        br_scroll.setWidget(br_matrix_w)
+        t5.addWidget(br_scroll, stretch=1)
+
+        self.tabs.addTab(tab5, "支管表")
+
         right_lay.addWidget(self.tabs, stretch=1)
 
         splitter.addWidget(right)
@@ -428,6 +513,11 @@ class SpecRulesWidget(QWidget):
             rule.get("thk_candidates_by_dn", {})
         )
 
+        # branch table
+        self._load_branch_table(
+            rule.get("branch_table", {})
+        )
+
     def _commit_current(self) -> None:
         key = self._current_class
         if not key or key not in self._rules:
@@ -464,6 +554,9 @@ class SpecRulesWidget(QWidget):
         # preserve thk_rules if they existed
         old = self._rules.get(self._current_class, {})
         spec["thk_rules"] = old.get("thk_rules", [])
+
+        # branch table — from combo matrix
+        spec["branch_table"] = self._read_branch_table()
 
         return spec
 
@@ -521,6 +614,87 @@ class SpecRulesWidget(QWidget):
     def _clear_matrix(self) -> None:
         for cb in self._matrix_cbs.values():
             cb.setChecked(False)
+
+    # ── branch table helpers ─────────────────────
+    def _load_branch_table(
+        self, bt: Dict[str, Dict[str, str]]
+    ) -> None:
+        """Set combo values from branch_table dict."""
+        for cb in self._br_cbs.values():
+            cb.setCurrentIndex(0)  # empty
+        for hdn, cols in bt.items():
+            for bdn, ft in cols.items():
+                key = (hdn, bdn)
+                if key in self._br_cbs:
+                    idx = self._br_cbs[key].findText(
+                        ft.upper()
+                    )
+                    if idx >= 0:
+                        self._br_cbs[key].setCurrentIndex(idx)
+
+    def _read_branch_table(
+        self,
+    ) -> Dict[str, Dict[str, str]]:
+        """Read combo states → branch_table dict."""
+        bt: Dict[str, Dict[str, str]] = {}
+        for (hdn, bdn), cb in self._br_cbs.items():
+            ft = cb.currentText().strip()
+            if ft:
+                bt.setdefault(hdn, {})[bdn] = ft
+        return bt
+
+    def _branch_auto_fill(self) -> None:
+        """Auto-fill branch table using standard logic.
+
+        - diagonal (H==B) → equal tee (ETE if ≤40, TEE if >40)
+        - small bore off-diagonal (H≤40, B<H) → SOC
+        - large bore off-diagonal: use TER/RWE/RPA heuristics
+        """
+        # read dn_threshold_bw from current class
+        thr = 50  # default
+        if self._current_class:
+            rule = self._rules.get(
+                self._current_class, {}
+            )
+            try:
+                thr = int(
+                    str(
+                        rule.get("dn_threshold_bw", "50")
+                    ).strip()
+                )
+            except ValueError:
+                pass
+
+        for (hdn, bdn), cb in self._br_cbs.items():
+            h = int(hdn)
+            b = int(bdn)
+            if b > h:
+                continue
+
+            if h == b:
+                # diagonal → equal tee
+                ft = "ETE" if h < thr else "TEE"
+            elif h < thr:
+                # small bore → sockolet
+                ft = "SOC"
+            else:
+                # large bore off-diagonal
+                if b < thr:
+                    # branch is small bore
+                    ft = "SOC"
+                elif h == b:
+                    ft = "TEE"
+                elif b >= h * 0.5:
+                    ft = "TER"
+                else:
+                    ft = "RWE"
+            idx = cb.findText(ft)
+            if idx >= 0:
+                cb.setCurrentIndex(idx)
+
+    def _branch_clear(self) -> None:
+        for cb in self._br_cbs.values():
+            cb.setCurrentIndex(0)
 
     # ════════════════════════════════════════════════════
     # Combo refresh (after new values merged)

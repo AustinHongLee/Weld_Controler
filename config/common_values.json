@@ -138,5 +138,8 @@
     "S-5S", "S-10S", "S-10", "S-20", "S-30",
     "S-40", "S-60", "S-80", "S-100",
     "S-120", "S-140", "S-160", "XXS"
+  ],
+  "branch_fitting_types": [
+    "SOC", "ETE", "RTE", "RWE", "TER", "TEE", "RPA"
   ]
 }

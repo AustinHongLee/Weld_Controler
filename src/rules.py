@@ -252,6 +252,7 @@ def _empty_spec() -> Dict[str, Any]:
         "material_candidates": [],
         "thk_candidates_by_dn": {},
         "thk_rules": [],
+        "branch_table": {},
     }
 
 
@@ -333,6 +334,24 @@ def normalize_rules(
             key=lambda r: (r["dn_min"], r["dn_max"])
         )
         spec["thk_rules"] = thk_rules
+
+        # branch table — {header_dn: {branch_dn: fitting_type}}
+        bt_raw = rule.get("branch_table", {})
+        bt: Dict[str, Dict[str, str]] = {}
+        if isinstance(bt_raw, dict):
+            for hdr, cols in bt_raw.items():
+                h = str(hdr).strip()
+                if not h.isdigit() or not isinstance(cols, dict):
+                    continue
+                row: Dict[str, str] = {}
+                for br, ft in cols.items():
+                    b = str(br).strip()
+                    ft_s = str(ft).strip().upper()
+                    if b.isdigit() and ft_s:
+                        row[b] = ft_s
+                if row:
+                    bt[h] = row
+        spec["branch_table"] = bt
 
         normalized[key] = spec
     return normalized
