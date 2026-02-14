@@ -13,17 +13,15 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
-    QHeaderView,
     QInputDialog,
     QLabel,
     QLineEdit,
     QListWidget,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QSplitter,
     QTabWidget,
-    QTableWidget,
-    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -158,28 +156,102 @@ class SpecRulesWidget(QWidget):
         mg.addWidget(self.mat_edit, 1, 1)
         t4.addWidget(mat_group)
 
-        # thk by dn table
-        thk_group = QGroupBox("壁厚候選 by DN")
+        # ── DN × Schedule checkbox matrix ────────
+        thk_group = QGroupBox(
+            "壁厚候選 — DN × Schedule 矩陣"
+        )
         tg = QVBoxLayout(thk_group)
-        self.thk_table = QTableWidget(0, 2)
-        self.thk_table.setHorizontalHeaderLabels(
-            ["DN", "壁厚候選 (逗號分隔)"]
-        )
-        hdr = self.thk_table.horizontalHeader()
-        hdr.setSectionResizeMode(
-            QHeaderView.ResizeMode.Stretch
-        )
-        tg.addWidget(self.thk_table)
 
-        thk_btns = QHBoxLayout()
-        add_dn = QPushButton("新增 DN 行")
-        add_dn.clicked.connect(self._add_dn_row)
-        thk_btns.addWidget(add_dn)
-        del_dn = QPushButton("刪除 DN 行")
-        del_dn.clicked.connect(self._del_dn_row)
-        thk_btns.addWidget(del_dn)
-        tg.addLayout(thk_btns)
-        t4.addWidget(thk_group)
+        # quick-fill toolbar
+        qf = QHBoxLayout()
+        qf.addWidget(QLabel("快填:"))
+
+        btn_small_80 = QPushButton(
+            "小口徑(≤40) S-80"
+        )
+        btn_small_80.clicked.connect(
+            lambda: self._quick_fill(
+                max_dn=40, schedules=["S-80"]
+            )
+        )
+        qf.addWidget(btn_small_80)
+
+        btn_large_40 = QPushButton(
+            "大口徑(≥50) S-40"
+        )
+        btn_large_40.clicked.connect(
+            lambda: self._quick_fill(
+                min_dn=50, schedules=["S-40"]
+            )
+        )
+        qf.addWidget(btn_large_40)
+
+        btn_all_10s = QPushButton("全部 S-10S")
+        btn_all_10s.clicked.connect(
+            lambda: self._quick_fill(
+                schedules=["S-10S"]
+            )
+        )
+        qf.addWidget(btn_all_10s)
+
+        btn_clear = QPushButton("清除全部")
+        btn_clear.clicked.connect(self._clear_matrix)
+        qf.addWidget(btn_clear)
+
+        qf.addStretch()
+        tg.addLayout(qf)
+
+        # scrollable matrix
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        matrix_widget = QWidget()
+        self._matrix_grid = QGridLayout(matrix_widget)
+        self._matrix_grid.setSpacing(2)
+
+        self._dn_list: List[str] = self._common.get(
+            "standard_dn", []
+        )
+        self._sch_list: List[str] = self._common.get(
+            "standard_schedule", []
+        )
+        # {(dn, sch): QCheckBox}
+        self._matrix_cbs: Dict[
+            tuple, QCheckBox
+        ] = {}
+
+        # header row — schedule labels
+        for ci, sch in enumerate(self._sch_list):
+            lbl = QLabel(sch)
+            lbl.setAlignment(
+                Qt.AlignmentFlag.AlignCenter
+            )
+            lbl.setStyleSheet(
+                "font-size: 11px; font-weight: bold;"
+            )
+            self._matrix_grid.addWidget(
+                lbl, 0, ci + 1
+            )
+
+        # rows — DN + checkboxes
+        for ri, dn in enumerate(self._dn_list):
+            dn_lbl = QLabel(f"DN {dn}")
+            dn_lbl.setStyleSheet(
+                "font-weight: bold; min-width: 50px;"
+            )
+            self._matrix_grid.addWidget(
+                dn_lbl, ri + 1, 0
+            )
+            for ci, sch in enumerate(self._sch_list):
+                cb = QCheckBox()
+                self._matrix_cbs[(dn, sch)] = cb
+                self._matrix_grid.addWidget(
+                    cb, ri + 1, ci + 1,
+                    Qt.AlignmentFlag.AlignCenter,
+                )
+
+        scroll.setWidget(matrix_widget)
+        tg.addWidget(scroll, stretch=1)
+        t4.addWidget(thk_group, stretch=1)
 
         self.tabs.addTab(tab4, "管材 & 壁厚")
 
@@ -351,22 +423,10 @@ class SpecRulesWidget(QWidget):
         mats = rule.get("material_candidates", [])
         self.mat_edit.setText(", ".join(mats))
 
-        # thk table
-        self.thk_table.setRowCount(0)
-        by_dn = rule.get("thk_candidates_by_dn", {})
-        for dk in sorted(
-            by_dn.keys(),
-            key=lambda x: int(x) if x.isdigit() else 0,
-        ):
-            row = self.thk_table.rowCount()
-            self.thk_table.insertRow(row)
-            self.thk_table.setItem(
-                row, 0, QTableWidgetItem(dk)
-            )
-            self.thk_table.setItem(
-                row, 1,
-                QTableWidgetItem(", ".join(by_dn[dk])),
-            )
+        # thk — checkbox matrix
+        self._load_matrix(
+            rule.get("thk_candidates_by_dn", {})
+        )
 
     def _commit_current(self) -> None:
         key = self._current_class
@@ -396,25 +456,10 @@ class SpecRulesWidget(QWidget):
             if m.strip()
         ]
 
-        # thk by dn
-        by_dn: Dict[str, List[str]] = {}
-        for r in range(self.thk_table.rowCount()):
-            dn_item = self.thk_table.item(r, 0)
-            thk_item = self.thk_table.item(r, 1)
-            if not dn_item:
-                continue
-            dk = dn_item.text().strip()
-            thks = (
-                [
-                    t.strip()
-                    for t in thk_item.text().split(",")
-                    if t.strip()
-                ]
-                if thk_item else []
-            )
-            if dk:
-                by_dn[dk] = thks
-        spec["thk_candidates_by_dn"] = by_dn
+        # thk by dn — from checkbox matrix
+        spec["thk_candidates_by_dn"] = (
+            self._read_matrix()
+        )
 
         # preserve thk_rules if they existed
         old = self._rules.get(self._current_class, {})
@@ -422,21 +467,60 @@ class SpecRulesWidget(QWidget):
 
         return spec
 
-    # ── thk table helpers ────────────────────────
-    def _add_dn_row(self) -> None:
-        row = self.thk_table.rowCount()
-        self.thk_table.insertRow(row)
-        self.thk_table.setItem(
-            row, 0, QTableWidgetItem("")
-        )
-        self.thk_table.setItem(
-            row, 1, QTableWidgetItem("")
-        )
+    # ── matrix helpers ───────────────────────────
+    def _load_matrix(
+        self, by_dn: Dict[str, List[str]]
+    ) -> None:
+        """Set checkbox states from thk_candidates_by_dn."""
+        # clear all
+        for cb in self._matrix_cbs.values():
+            cb.setChecked(False)
+        # check matching
+        for dn, schs in by_dn.items():
+            for sch in schs:
+                key = (dn, sch)
+                if key in self._matrix_cbs:
+                    self._matrix_cbs[key].setChecked(True)
 
-    def _del_dn_row(self) -> None:
-        row = self.thk_table.currentRow()
-        if row >= 0:
-            self.thk_table.removeRow(row)
+    def _read_matrix(self) -> Dict[str, List[str]]:
+        """Read checkbox states → thk_candidates_by_dn."""
+        by_dn: Dict[str, List[str]] = {}
+        for dn in self._dn_list:
+            checked = [
+                sch for sch in self._sch_list
+                if self._matrix_cbs.get(
+                    (dn, sch), None
+                ) and self._matrix_cbs[
+                    (dn, sch)
+                ].isChecked()
+            ]
+            if checked:
+                by_dn[dn] = checked
+        return by_dn
+
+    def _quick_fill(
+        self,
+        schedules: List[str],
+        min_dn: int = 0,
+        max_dn: int = 9999,
+    ) -> None:
+        """Check specified schedules for DN in range."""
+        for dn in self._dn_list:
+            try:
+                dn_int = int(dn)
+            except ValueError:
+                continue
+            if min_dn <= dn_int <= max_dn:
+                for sch in schedules:
+                    key = (dn, sch)
+                    if key in self._matrix_cbs:
+                        self._matrix_cbs[
+                            key
+                        ].setChecked(True)
+
+    def _clear_matrix(self) -> None:
+        for cb in self._matrix_cbs.values():
+            cb.setChecked(False)
 
     # ════════════════════════════════════════════════════
     # Combo refresh (after new values merged)

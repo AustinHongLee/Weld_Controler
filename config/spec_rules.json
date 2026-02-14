@@ -17,21 +17,53 @@
     "pwht_required": false,
     "nde_requirement": "RT 10%",
     "default_material": "C.S",
-    "material_candidates": ["C.S", "A106-B", "A105"],
+    "material_candidates": [
+      "C.S",
+      "A106-B",
+      "A105"
+    ],
     "thk_candidates_by_dn": {
-      "15": ["S-80"],
-      "20": ["S-80"],
-      "25": ["S-80"],
-      "32": ["S-80"],
-      "40": ["S-80"],
-      "50": ["S-40"],
-      "65": ["S-40"],
-      "80": ["S-40"],
-      "100": ["S-40"],
-      "150": ["S-20", "S-40"],
-      "200": ["S-20", "S-40"],
-      "250": ["S-20"],
-      "300": ["S-20"]
+      "15": [
+        "S-80"
+      ],
+      "20": [
+        "S-80"
+      ],
+      "25": [
+        "S-80"
+      ],
+      "32": [
+        "S-80"
+      ],
+      "40": [
+        "S-80"
+      ],
+      "50": [
+        "S-40"
+      ],
+      "65": [
+        "S-40"
+      ],
+      "80": [
+        "S-40"
+      ],
+      "100": [
+        "S-40"
+      ],
+      "150": [
+        "S-20",
+        "S-40"
+      ],
+      "200": [
+        "S-20",
+        "S-40"
+      ],
+      "250": [
+        "S-20"
+      ],
+      "300": [
+        "S-20"
+      ]
     },
     "thk_rules": []
   },
@@ -53,16 +85,35 @@
     "pwht_required": false,
     "nde_requirement": "PT 100%",
     "default_material": "SS304",
-    "material_candidates": ["SS304", "SS316"],
+    "material_candidates": [
+      "SS304",
+      "SS316"
+    ],
     "thk_candidates_by_dn": {
-      "15": ["S-10S"],
-      "20": ["S-10S"],
-      "25": ["S-10S"],
-      "50": ["S-10S"],
-      "80": ["S-10S"],
-      "100": ["S-10S"],
-      "150": ["S-10S"],
-      "200": ["S-10S"]
+      "15": [
+        "S-10S"
+      ],
+      "20": [
+        "S-10S"
+      ],
+      "25": [
+        "S-10S"
+      ],
+      "50": [
+        "S-10S"
+      ],
+      "80": [
+        "S-10S"
+      ],
+      "100": [
+        "S-10S"
+      ],
+      "150": [
+        "S-10S"
+      ],
+      "200": [
+        "S-10S"
+      ]
     },
     "thk_rules": []
   },
@@ -84,16 +135,83 @@
     "pwht_required": true,
     "nde_requirement": "RT 10%",
     "default_material": "C.S",
-    "material_candidates": ["C.S", "A106-B", "A105"],
+    "material_candidates": [
+      "C.S",
+      "A106-B",
+      "A105"
+    ],
     "thk_candidates_by_dn": {
-      "15": ["S-80", "S-160"],
-      "20": ["S-80", "S-160"],
-      "25": ["S-80"],
-      "50": ["S-40", "S-80"],
-      "80": ["S-40"],
-      "100": ["S-40"],
-      "150": ["S-40"],
-      "200": ["S-20", "S-40"]
+      "15": [
+        "S-80",
+        "S-160"
+      ],
+      "20": [
+        "S-80",
+        "S-160"
+      ],
+      "25": [
+        "S-80"
+      ],
+      "50": [
+        "S-40",
+        "S-80"
+      ],
+      "80": [
+        "S-40"
+      ],
+      "100": [
+        "S-40"
+      ],
+      "150": [
+        "S-40"
+      ],
+      "200": [
+        "S-20",
+        "S-40"
+      ]
+    },
+    "thk_rules": []
+  },
+  "AA1B": {
+    "description": "",
+    "rating": "150#",
+    "base_material": "C.S",
+    "pipe_spec": "ASTM A106 Gr.B",
+    "design_temp_min": "-29",
+    "design_temp_max": "150",
+    "design_pressure": "150",
+    "corrosion_allowance": "1.5",
+    "default_weld_type": "GTAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "",
+    "flange_face": "RF",
+    "gasket_type": "PTFE Sheet",
+    "bolt_material": "B7/2H",
+    "pwht_required": false,
+    "nde_requirement": "",
+    "default_material": "C.S",
+    "material_candidates": [
+      "A106"
+    ],
+    "thk_candidates_by_dn": {
+      "15": [
+        "S-80"
+      ],
+      "20": [
+        "S-80"
+      ],
+      "25": [
+        "S-80"
+      ],
+      "32": [
+        "S-80"
+      ],
+      "40": [
+        "S-80"
+      ],
+      "50": [
+        "S-40"
+      ]
     },
     "thk_rules": []
   }
