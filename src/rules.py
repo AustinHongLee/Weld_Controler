@@ -1,3 +1,32 @@
+"""Piping Material Classification (Spec Rules) engine.
+
+Each *class_code* (e.g. AA2B) maps to a full piping spec:
+
+    ┌─ 基本定義 ───────────────────────────────────┐
+    │ description         級數說明                  │
+    │ rating              壓力等級 (150#, 300# …)    │
+    │ base_material       基本管材 (C.S, SS304 …)   │
+    │ pipe_spec           管材規範 (ASTM A106 Gr.B) │
+    │ design_temp_min/max 設計溫度範圍              │
+    │ design_pressure     設計壓力                  │
+    │ corrosion_allowance 腐蝕裕度 (mm)             │
+    ├─ 連接方式 ───────────────────────────────────┤
+    │ default_weld_type   預設焊接型式 (SMAW/GTAW)  │
+    │ joint_type          連接型式 (BW/SW/THD)      │
+    │ dn_threshold_bw     BW/SW 分界DN (≥此值用BW)  │
+    │ flange_face         法蘭面型式 (RF/RTJ/FF)    │
+    │ gasket_type         墊片型式                  │
+    │ bolt_material       螺栓材質                  │
+    ├─ 檢驗/處理 ──────────────────────────────────┤
+    │ pwht_required       是否需退火                │
+    │ nde_requirement     NDE 要求 (RT10%, PT100%)  │
+    ├─ 管材候選 (沿用) ────────────────────────────┤
+    │ material_candidates 可選管材清單              │
+    │ default_material    預設管材                  │
+    │ thk_candidates_by_dn  DN→壁厚對照           │
+    │ thk_rules            DN範圍→壁厚規則         │
+    └──────────────────────────────────────────────┘
+"""
 from __future__ import annotations
 
 import json
@@ -5,133 +34,275 @@ import os
 from typing import Any, Dict, List
 
 
+# ─── Spec field metadata ─────────────────────────────────
+# (key, display_header, input_type)
+#   input_type: "text" | "combo" | "bool"
+SPEC_FIELDS: List[tuple] = [
+    # 基本定義
+    ("description",         "級數說明",         "text"),
+    ("rating",              "壓力等級",         "text"),
+    ("base_material",       "基本管材",         "text"),
+    ("pipe_spec",           "管材規範",         "text"),
+    ("design_temp_min",     "最低設計溫度 °C",  "text"),
+    ("design_temp_max",     "最高設計溫度 °C",  "text"),
+    ("design_pressure",     "設計壓力 Kg/cm²",  "text"),
+    ("corrosion_allowance", "腐蝕裕度 mm",      "text"),
+    # 連接方式
+    ("default_weld_type",   "預設焊接型式",     "text"),
+    ("joint_type",          "連接型式",         "text"),
+    ("dn_threshold_bw",     "BW/SW 分界 DN",   "text"),
+    ("flange_face",         "法蘭面型式",       "text"),
+    ("gasket_type",         "墊片型式",         "text"),
+    ("bolt_material",       "螺栓材質",         "text"),
+    # 檢驗/處理
+    ("pwht_required",       "是否需退火",       "bool"),
+    ("nde_requirement",     "NDE 要求",         "text"),
+    # 材質候選
+    ("default_material",    "預設管材",         "text"),
+]
+
+SPEC_KEYS = [f[0] for f in SPEC_FIELDS]
+
+
+# ─── Persistence ─────────────────────────────────────────
+
 def load_spec_rules(path: str) -> Dict[str, Any]:
-    with open(path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+    with open(path, "r", encoding="utf-8") as fh:
+        return json.load(fh)
 
 
-def save_spec_rules(path: str, data: Dict[str, Any]) -> None:
+def save_spec_rules(
+    path: str, data: Dict[str, Any]
+) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    tmp_path = f"{path}.tmp"
-    with open(tmp_path, "w", encoding="utf-8") as handle:
-        json.dump(data, handle, ensure_ascii=False, indent=2)
-    os.replace(tmp_path, path)
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
 
 
-def get_material_candidates(rules: Dict[str, Any], class_code: str) -> List[str]:
-    rule = rules.get(class_code, {})
-    return list(rule.get("material_candidates", []))
+# ─── Query helpers ───────────────────────────────────────
 
-
-def get_thk_candidates(rules: Dict[str, Any], class_code: str, dn: str) -> List[str]:
-    try:
-        dn_int = int(str(dn).strip())
-    except ValueError:
-        return []
-    return get_thk_candidates_for_dn(rules, class_code, dn_int)
-
-
-def get_default_weld_type(rules: Dict[str, Any], class_code: str) -> str:
-    rule = rules.get(class_code, {})
-    return str(rule.get("default_weld_type", ""))
+def get_rule(
+    rules: Dict[str, Any], class_code: str
+) -> Dict[str, Any]:
+    """Return the spec dict for *class_code*, or {}."""
+    return rules.get(class_code, {})
 
 
 def get_default_material(
     rules: Dict[str, Any], class_code: str
 ) -> str:
-    """Return default material for a pipe class.
-
-    Falls back to first material_candidate if no explicit
-    default_material is set.
-    """
-    rule = rules.get(class_code, {})
+    rule = get_rule(rules, class_code)
     dm = rule.get("default_material", "")
     if dm:
         return str(dm)
-    candidates = rule.get("material_candidates", [])
-    if candidates:
-        return str(candidates[0])
-    return ""
+    cands = rule.get("material_candidates", [])
+    return str(cands[0]) if cands else ""
 
 
-def get_thk_candidates_for_dn(rules: Dict[str, Any], class_code: str, dn_int: int) -> List[str]:
-    rule = rules.get(class_code, {})
+def get_material_candidates(
+    rules: Dict[str, Any], class_code: str
+) -> List[str]:
+    return list(
+        get_rule(rules, class_code)
+        .get("material_candidates", [])
+    )
+
+
+def get_default_weld_type(
+    rules: Dict[str, Any], class_code: str
+) -> str:
+    return str(
+        get_rule(rules, class_code)
+        .get("default_weld_type", "")
+    )
+
+
+def get_joint_type(
+    rules: Dict[str, Any], class_code: str,
+    dn: str = "",
+) -> str:
+    """Return joint type, auto-switch BW/SW by DN if
+    *dn_threshold_bw* is set.
+    """
+    rule = get_rule(rules, class_code)
+    jt = str(rule.get("joint_type", ""))
+    threshold = rule.get("dn_threshold_bw", "")
+    if not threshold or not dn:
+        return jt
+    try:
+        dn_int = int(str(dn).strip())
+        thr_int = int(str(threshold).strip())
+    except ValueError:
+        return jt
+    return "BW" if dn_int >= thr_int else "SW"
+
+
+def get_thk_candidates(
+    rules: Dict[str, Any], class_code: str, dn: str
+) -> List[str]:
+    try:
+        dn_int = int(str(dn).strip())
+    except ValueError:
+        return []
+    return _thk_for_dn(
+        get_rule(rules, class_code), dn_int
+    )
+
+
+def get_thk_candidates_for_dn(
+    rules: Dict[str, Any], class_code: str,
+    dn_int: int,
+) -> List[str]:
+    return _thk_for_dn(
+        get_rule(rules, class_code), dn_int
+    )
+
+
+def _thk_for_dn(
+    rule: Dict[str, Any], dn_int: int
+) -> List[str]:
     by_dn = rule.get("thk_candidates_by_dn", {})
     direct = by_dn.get(str(dn_int), [])
     if direct:
         return list(direct)
-
     for item in rule.get("thk_rules", []):
         if not isinstance(item, dict):
             continue
         try:
-            dn_min = int(item.get("dn_min"))
-            dn_max = int(item.get("dn_max"))
-        except (TypeError, ValueError):
+            lo = int(item["dn_min"])
+            hi = int(item["dn_max"])
+        except (KeyError, TypeError, ValueError):
             continue
-        if dn_min <= dn_int <= dn_max:
-            return [str(v).strip() for v in item.get("thk", []) if str(v).strip()]
+        if lo <= dn_int <= hi:
+            return [
+                str(v).strip()
+                for v in item.get("thk", [])
+                if str(v).strip()
+            ]
     return []
 
 
-def normalize_rules(rules: Dict[str, Any]) -> Dict[str, Any]:
+# ─── Normalize / migrate ────────────────────────────────
+
+def _empty_spec() -> Dict[str, Any]:
+    """Return a blank spec dict with all keys present."""
+    return {
+        "description": "",
+        "rating": "",
+        "base_material": "",
+        "pipe_spec": "",
+        "design_temp_min": "",
+        "design_temp_max": "",
+        "design_pressure": "",
+        "corrosion_allowance": "",
+        "default_weld_type": "",
+        "joint_type": "",
+        "dn_threshold_bw": "",
+        "flange_face": "",
+        "gasket_type": "",
+        "bolt_material": "",
+        "pwht_required": False,
+        "nde_requirement": "",
+        "default_material": "",
+        "material_candidates": [],
+        "thk_candidates_by_dn": {},
+        "thk_rules": [],
+    }
+
+
+def normalize_rules(
+    rules: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Clean & migrate spec data, ensuring all keys exist."""
     normalized: Dict[str, Any] = {}
     for class_code, rule in rules.items():
         key = str(class_code).strip().upper()
-        if not key:
+        if not key or not isinstance(rule, dict):
             continue
 
-        mats_raw = rule.get("material_candidates", []) if isinstance(rule, dict) else []
-        mats = _dedup_clean_list(mats_raw)
+        spec = _empty_spec()
 
-        by_dn_raw = rule.get("thk_candidates_by_dn", {}) if isinstance(rule, dict) else {}
+        # scalar text fields
+        for fk in (
+            "description", "rating", "base_material",
+            "pipe_spec", "design_temp_min",
+            "design_temp_max", "design_pressure",
+            "corrosion_allowance", "default_weld_type",
+            "joint_type", "dn_threshold_bw",
+            "flange_face", "gasket_type",
+            "bolt_material", "nde_requirement",
+            "default_material",
+        ):
+            val = rule.get(fk, "")
+            spec[fk] = str(val).strip() if val else ""
+
+        # bool
+        spec["pwht_required"] = bool(
+            rule.get("pwht_required", False)
+        )
+
+        # material candidates
+        spec["material_candidates"] = _dedup_clean(
+            rule.get("material_candidates", [])
+        )
+
+        # thk by dn — direct mapping
+        by_dn_raw = rule.get(
+            "thk_candidates_by_dn", {}
+        )
         by_dn: Dict[str, List[str]] = {}
         if isinstance(by_dn_raw, dict):
-            for dn_key, thk_values in by_dn_raw.items():
-                dn = str(dn_key).strip()
-                if not dn.isdigit() or not isinstance(thk_values, list):
+            for dk, tv in by_dn_raw.items():
+                d = str(dk).strip()
+                if not d.isdigit():
                     continue
-                cleaned = _dedup_clean_list(thk_values)
+                if not isinstance(tv, list):
+                    continue
+                cleaned = _dedup_clean(tv)
                 if cleaned:
-                    by_dn[dn] = cleaned
+                    by_dn[d] = cleaned
+        spec["thk_candidates_by_dn"] = by_dn
 
-        rules_raw = rule.get("thk_rules", []) if isinstance(rule, dict) else []
+        # thk rules — range-based
+        rules_raw = rule.get("thk_rules", [])
         thk_rules: List[Dict[str, Any]] = []
         if isinstance(rules_raw, list):
             for item in rules_raw:
                 if not isinstance(item, dict):
                     continue
                 try:
-                    dn_min = int(item.get("dn_min"))
-                    dn_max = int(item.get("dn_max"))
-                except (TypeError, ValueError):
+                    lo = int(item["dn_min"])
+                    hi = int(item["dn_max"])
+                except (KeyError, TypeError, ValueError):
                     continue
-                if dn_min > dn_max:
-                    dn_min, dn_max = dn_max, dn_min
-                thk_values = _dedup_clean_list(item.get("thk", []))
-                thk_rules.append({"dn_min": dn_min, "dn_max": dn_max, "thk": thk_values})
-        thk_rules.sort(key=lambda row: (row["dn_min"], row["dn_max"]))
+                if lo > hi:
+                    lo, hi = hi, lo
+                thk_rules.append({
+                    "dn_min": lo,
+                    "dn_max": hi,
+                    "thk": _dedup_clean(
+                        item.get("thk", [])
+                    ),
+                })
+        thk_rules.sort(
+            key=lambda r: (r["dn_min"], r["dn_max"])
+        )
+        spec["thk_rules"] = thk_rules
 
-        normalized[key] = {
-            "material_candidates": mats,
-            "thk_candidates_by_dn": by_dn,
-            "thk_rules": thk_rules,
-            "default_weld_type": str(rule.get("default_weld_type", "")).strip()
-            if isinstance(rule, dict)
-            else "",
-        }
+        normalized[key] = spec
     return normalized
 
 
-def _dedup_clean_list(values: Any) -> List[str]:
+def _dedup_clean(values: Any) -> List[str]:
     if not isinstance(values, list):
         return []
+    seen: set = set()
     result: List[str] = []
-    seen = set()
-    for value in values:
-        text = str(value).strip()
-        if not text or text in seen:
-            continue
-        seen.add(text)
-        result.append(text)
+    for v in values:
+        t = str(v).strip()
+        if t and t not in seen:
+            seen.add(t)
+            result.append(t)
     return result

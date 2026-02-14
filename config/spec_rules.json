@@ -1,38 +1,100 @@
 {
   "AA2B": {
-    "material_candidates": [
-      "C.S",
-      "SS304",
-      "SS316"
-    ],
+    "description": "Carbon Steel, 150#, RF",
+    "rating": "150#",
+    "base_material": "C.S",
+    "pipe_spec": "ASTM A106 Gr.B",
+    "design_temp_min": "-29",
+    "design_temp_max": "200",
+    "design_pressure": "20",
+    "corrosion_allowance": "1.5",
+    "default_weld_type": "SMAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "50",
+    "flange_face": "RF",
+    "gasket_type": "Spiral Wound",
+    "bolt_material": "B7/2H",
+    "pwht_required": false,
+    "nde_requirement": "RT 10%",
     "default_material": "C.S",
+    "material_candidates": ["C.S", "A106-B", "A105"],
     "thk_candidates_by_dn": {
-      "15": [
-        "S-40",
-        "S-80"
-      ],
-      "25": [
-        "S-40",
-        "S-80"
-      ],
-      "50": [
-        "S-40",
-        "S-80"
-      ],
-      "65": [
-        "S-40",
-        "S-80"
-      ]
+      "15": ["S-80"],
+      "20": ["S-80"],
+      "25": ["S-80"],
+      "32": ["S-80"],
+      "40": ["S-80"],
+      "50": ["S-40"],
+      "65": ["S-40"],
+      "80": ["S-40"],
+      "100": ["S-40"],
+      "150": ["S-20", "S-40"],
+      "200": ["S-20", "S-40"],
+      "250": ["S-20"],
+      "300": ["S-20"]
     },
-    "default_weld_type": "FSW"
+    "thk_rules": []
   },
   "AA1E": {
-    "material_candidates": [
-      "SS304",
-      "SS316"
-    ],
+    "description": "Stainless Steel 304, 150#, RF",
+    "rating": "150#",
+    "base_material": "SS304",
+    "pipe_spec": "ASTM A312 TP304",
+    "design_temp_min": "-196",
+    "design_temp_max": "400",
+    "design_pressure": "20",
+    "corrosion_allowance": "0",
+    "default_weld_type": "GTAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "50",
+    "flange_face": "RF",
+    "gasket_type": "Spiral Wound (SS304 inner ring)",
+    "bolt_material": "B8/8",
+    "pwht_required": false,
+    "nde_requirement": "PT 100%",
     "default_material": "SS304",
-    "thk_candidates_by_dn": {},
-    "default_weld_type": "FSW"
+    "material_candidates": ["SS304", "SS316"],
+    "thk_candidates_by_dn": {
+      "15": ["S-10S"],
+      "20": ["S-10S"],
+      "25": ["S-10S"],
+      "50": ["S-10S"],
+      "80": ["S-10S"],
+      "100": ["S-10S"],
+      "150": ["S-10S"],
+      "200": ["S-10S"]
+    },
+    "thk_rules": []
+  },
+  "BA2B": {
+    "description": "Carbon Steel, 300#, RF",
+    "rating": "300#",
+    "base_material": "C.S",
+    "pipe_spec": "ASTM A106 Gr.B",
+    "design_temp_min": "-29",
+    "design_temp_max": "400",
+    "design_pressure": "50",
+    "corrosion_allowance": "3.0",
+    "default_weld_type": "SMAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "50",
+    "flange_face": "RF",
+    "gasket_type": "Spiral Wound",
+    "bolt_material": "B7/2H",
+    "pwht_required": true,
+    "nde_requirement": "RT 10%",
+    "default_material": "C.S",
+    "material_candidates": ["C.S", "A106-B", "A105"],
+    "thk_candidates_by_dn": {
+      "15": ["S-80", "S-160"],
+      "20": ["S-80", "S-160"],
+      "25": ["S-80"],
+      "50": ["S-40", "S-80"],
+      "80": ["S-40"],
+      "100": ["S-40"],
+      "150": ["S-40"],
+      "200": ["S-20", "S-40"]
+    },
+    "thk_rules": []
   }
 }

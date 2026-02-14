@@ -150,6 +150,25 @@ class AppController:
             )
             if med:
                 dw.medium = med
+        # Auto-fill from spec: pwht, design_pressure, nde
+        if dw.pipe_class:
+            spec = rules.get_rule(
+                self.spec_rules, dw.pipe_class
+            )
+            if spec:
+                if not dw.pwht:
+                    pw = spec.get("pwht_required", False)
+                    dw.pwht = "Y" if pw else "N"
+                if not dw.design_pressure:
+                    dp = spec.get("design_pressure", "")
+                    if dp:
+                        dw.design_pressure = str(dp)
+                if not dw.nde_pct:
+                    nde = spec.get(
+                        "nde_requirement", ""
+                    )
+                    if nde:
+                        dw.nde_pct = nde
 
     def update_drawing(
         self, idx: int, data: Dict[str, str]
