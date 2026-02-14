@@ -9,6 +9,7 @@ from typing import Any, Dict, List
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
+    QComboBox,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
@@ -48,6 +49,7 @@ class SpecRulesWidget(QWidget):
             k: dict(v) for k, v in self.ctrl.spec_rules.items()
         }
         self._current_class: str = ""
+        self._common = dict(self.ctrl.common_values)
 
         outer = QVBoxLayout(self)
 
@@ -141,7 +143,13 @@ class SpecRulesWidget(QWidget):
         mat_group = QGroupBox("管材")
         mg = QGridLayout(mat_group)
         mg.addWidget(QLabel("預設管材:"), 0, 0)
-        self.default_mat_edit = QLineEdit()
+        self.default_mat_edit = QComboBox()
+        self.default_mat_edit.setEditable(True)
+        dm_vals = self._common.get(
+            "default_material", []
+        )
+        self.default_mat_edit.addItems(dm_vals)
+        self.default_mat_edit.setCurrentText("")
         mg.addWidget(self.default_mat_edit, 0, 1)
         mg.addWidget(
             QLabel("材質候選 (逗號分隔):"), 1, 0
@@ -212,7 +220,13 @@ class SpecRulesWidget(QWidget):
             grid.addWidget(label, r, c * cols)
 
             if input_type == "bool":
-                w = QCheckBox()
+                w: QWidget = QCheckBox()
+                grid.addWidget(w, r, c * cols + 1)
+            elif key in self._common:
+                w = QComboBox()
+                w.setEditable(True)
+                w.addItems(self._common[key])
+                w.setCurrentText("")
                 grid.addWidget(w, r, c * cols + 1)
             else:
                 w = QLineEdit()
@@ -323,11 +337,15 @@ class SpecRulesWidget(QWidget):
             val = rule.get(key, "")
             if isinstance(w, QCheckBox):
                 w.setChecked(bool(val))
+            elif isinstance(w, QComboBox):
+                w.setCurrentText(
+                    str(val) if val else ""
+                )
             else:
                 w.setText(str(val) if val else "")
 
         # material tab
-        self.default_mat_edit.setText(
+        self.default_mat_edit.setCurrentText(
             str(rule.get("default_material", ""))
         )
         mats = rule.get("material_candidates", [])
@@ -363,12 +381,14 @@ class SpecRulesWidget(QWidget):
         for key, w in self._scalar_widgets.items():
             if isinstance(w, QCheckBox):
                 spec[key] = w.isChecked()
+            elif isinstance(w, QComboBox):
+                spec[key] = w.currentText().strip()
             else:
                 spec[key] = w.text().strip()
 
         # material
         spec["default_material"] = (
-            self.default_mat_edit.text().strip()
+            self.default_mat_edit.currentText().strip()
         )
         spec["material_candidates"] = [
             m.strip()
@@ -419,6 +439,28 @@ class SpecRulesWidget(QWidget):
             self.thk_table.removeRow(row)
 
     # ════════════════════════════════════════════════════
+    # Combo refresh (after new values merged)
+    # ════════════════════════════════════════════════════
+    def _refresh_combos(self) -> None:
+        """Update all editable combos with latest common
+        values, keeping current text intact."""
+        for key, w in self._scalar_widgets.items():
+            if isinstance(w, QComboBox):
+                cur = w.currentText()
+                w.clear()
+                w.addItems(
+                    self._common.get(key, [])
+                )
+                w.setCurrentText(cur)
+        # default_material combo
+        cur = self.default_mat_edit.currentText()
+        self.default_mat_edit.clear()
+        self.default_mat_edit.addItems(
+            self._common.get("default_material", [])
+        )
+        self.default_mat_edit.setCurrentText(cur)
+
+    # ════════════════════════════════════════════════════
     # Save
     # ════════════════════════════════════════════════════
     def _save(self) -> None:
@@ -430,6 +472,11 @@ class SpecRulesWidget(QWidget):
                 k: dict(v)
                 for k, v in cleaned.items()
             }
+            # Refresh common values (may have new entries)
+            self._common = dict(
+                self.ctrl.common_values
+            )
+            self._refresh_combos()
             QMessageBox.information(
                 self, "完成", "規則已儲存"
             )

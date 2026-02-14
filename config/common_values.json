@@ -1,0 +1,71 @@
+{
+  "rating": [
+    "150#", "300#", "600#", "900#", "1500#", "2500#"
+  ],
+  "base_material": [
+    "C.S", "SS304", "SS304L", "SS316", "SS316L",
+    "A106-B", "A333-6", "Duplex 2205",
+    "Alloy 20", "Monel 400", "Inconel 625",
+    "Cu-Ni 90/10", "GRP/FRP"
+  ],
+  "pipe_spec": [
+    "ASTM A106 Gr.B",
+    "ASTM A333 Gr.6",
+    "ASTM A312 TP304",
+    "ASTM A312 TP304L",
+    "ASTM A312 TP316",
+    "ASTM A312 TP316L",
+    "ASTM A790 S31803",
+    "ASTM A53 Gr.B",
+    "ASTM A671 Gr.CC60",
+    "API 5L Gr.B"
+  ],
+  "default_weld_type": [
+    "SMAW", "GTAW", "FCAW", "SAW", "GMAW",
+    "GTAW+SMAW", "GTAW+FCAW"
+  ],
+  "joint_type": [
+    "BW", "SW", "THD", "BW/SW", "FLG"
+  ],
+  "flange_face": [
+    "RF", "RTJ", "FF", "LJ", "T&G"
+  ],
+  "gasket_type": [
+    "Spiral Wound",
+    "Spiral Wound (SS304 inner ring)",
+    "Spiral Wound (SS316 inner ring)",
+    "Ring Joint (R/RX/BX)",
+    "PTFE Sheet",
+    "Compressed Asbestos Free",
+    "Kammprofile",
+    "Metal Jacketed"
+  ],
+  "bolt_material": [
+    "B7/2H", "B7M/2HM", "B8/8", "B8M/8M",
+    "B16/4", "L7/4", "L7M/4"
+  ],
+  "nde_requirement": [
+    "RT 10%", "RT 100%",
+    "PT 10%", "PT 100%",
+    "MT 10%", "MT 100%",
+    "UT 10%", "UT 100%",
+    "RT 10% + PT 100%",
+    "Visual 100%"
+  ],
+  "corrosion_allowance": [
+    "0", "1.0", "1.5", "3.0", "6.0"
+  ],
+  "design_pressure": [
+    "10", "15", "20", "35", "50", "100", "150"
+  ],
+  "design_temp_min": [
+    "-196", "-101", "-46", "-29", "0"
+  ],
+  "design_temp_max": [
+    "100", "200", "300", "400", "500", "600"
+  ],
+  "default_material": [
+    "C.S", "SS304", "SS304L", "SS316", "SS316L",
+    "A106-B", "Duplex 2205"
+  ]
+}

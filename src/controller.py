@@ -35,6 +35,9 @@ class AppController:
         self.system_map_path = os.path.join(
             cfg_dir, "system_map.json"
         )
+        self.common_values_path = os.path.join(
+            cfg_dir, "common_values.json"
+        )
 
         raw = storage.ensure_project(project_path)
         self.project = Project.from_dict(raw)
@@ -44,6 +47,9 @@ class AppController:
         self.spec_rules = rules.load_spec_rules(rules_path)
         self.system_map = parser.load_system_map(
             self.system_map_path
+        )
+        self.common_values = rules.load_common_values(
+            self.common_values_path
         )
 
         # Currently-selected drawing index (for weld editing)
@@ -321,6 +327,14 @@ class AppController:
     ) -> None:
         rules.save_spec_rules(self.rules_path, data)
         self.spec_rules = data
+        # Auto-merge new values into common_values
+        if rules.merge_new_values(
+            self.common_values, data
+        ):
+            rules.save_common_values(
+                self.common_values_path,
+                self.common_values,
+            )
 
     # ═════════════════════════════════════════════════════
     # Export

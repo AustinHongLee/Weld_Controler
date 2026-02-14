@@ -81,6 +81,49 @@ def save_spec_rules(
     os.replace(tmp, path)
 
 
+# ─── Common values (下拉常用值) ──────────────────────────
+# Keys in common_values.json map to SPEC_FIELDS keys.
+
+def load_common_values(path: str) -> Dict[str, List[str]]:
+    if not os.path.exists(path):
+        return {}
+    with open(path, "r", encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def save_common_values(
+    path: str, data: Dict[str, List[str]]
+) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
+
+
+def merge_new_values(
+    common: Dict[str, List[str]],
+    spec_rules: Dict[str, Any],
+) -> bool:
+    """Scan all specs for values not yet in *common*.
+
+    Returns True if new values were added.
+    """
+    changed = False
+    for _code, rule in spec_rules.items():
+        if not isinstance(rule, dict):
+            continue
+        for key in common:
+            val = rule.get(key, "")
+            if isinstance(val, bool):
+                continue
+            val = str(val).strip()
+            if val and val not in common[key]:
+                common[key].append(val)
+                changed = True
+    return changed
+
+
 # ─── Query helpers ───────────────────────────────────────
 
 def get_rule(
