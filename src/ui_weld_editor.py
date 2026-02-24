@@ -55,10 +55,21 @@ class WeldControlTab(QWidget):
         self.gen_count.setValue(5)
         gen_layout.addWidget(self.gen_count)
 
-        gen_layout.addWidget(QLabel("編號前綴:"))
-        self.gen_prefix = QLineEdit("W")
-        self.gen_prefix.setMaximumWidth(80)
-        gen_layout.addWidget(self.gen_prefix)
+        gen_layout.addWidget(QLabel("起始編號:"))
+        self.gen_start = QSpinBox()
+        self.gen_start.setRange(1, 9999)
+        self.gen_start.setValue(1)
+        self.gen_start.setMaximumWidth(80)
+        gen_layout.addWidget(self.gen_start)
+
+        gen_layout.addWidget(QLabel("後綴:"))
+        self.gen_suffix = QComboBox()
+        self.gen_suffix.addItems(["", "r", "a"])
+        self.gen_suffix.setToolTip(
+            "空白=正常, r=現場修改口, a=追加口"
+        )
+        self.gen_suffix.setMaximumWidth(60)
+        gen_layout.addWidget(self.gen_suffix)
 
         gen_btn = QPushButton("產生")
         gen_btn.clicked.connect(self._batch_generate)
@@ -176,16 +187,18 @@ class WeldControlTab(QWidget):
             )
             return
         count = self.gen_count.value()
-        prefix = self.gen_prefix.text().strip() or "W"
-        start = len(dw.welds) + 1
+        start = self.gen_start.value()
+        suffix = self.gen_suffix.currentText()
         defaults = self.ctrl.get_weld_defaults()
         new_welds: List[Dict[str, str]] = []
         for i in range(count):
             w = dict(defaults)
-            w["weld_no"] = f"{prefix}{start + i}"
+            w["weld_no"] = f"{start + i}{suffix}"
             new_welds.append(w)
         self.ctrl.add_welds(new_welds)
         self.refresh()
+        # auto-advance start number for next batch
+        self.gen_start.setValue(start + count)
 
     def _apply_defaults(self) -> None:
         self.ctrl.apply_defaults_to_all_welds()

@@ -1,187 +1,14 @@
 {
-  "AA2B": {
-    "description": "Carbon Steel, 150#, RF",
-    "rating": "150#",
-    "base_material": "C.S",
-    "pipe_spec": "ASTM A106 Gr.B",
-    "design_temp_min": "-29",
-    "design_temp_max": "200",
-    "design_pressure": "20",
-    "corrosion_allowance": "1.5",
-    "default_weld_type": "SMAW",
-    "joint_type": "BW/SW",
-    "dn_threshold_bw": "50",
-    "flange_face": "RF",
-    "gasket_type": "Spiral Wound",
-    "bolt_material": "B7/2H",
-    "pwht_required": false,
-    "nde_requirement": "RT 10%",
-    "default_material": "C.S",
-    "material_candidates": [
-      "C.S",
-      "A106-B",
-      "A105"
-    ],
-    "thk_candidates_by_dn": {
-      "15": [
-        "S-80"
-      ],
-      "20": [
-        "S-80"
-      ],
-      "25": [
-        "S-80"
-      ],
-      "32": [
-        "S-80"
-      ],
-      "40": [
-        "S-80"
-      ],
-      "50": [
-        "S-40"
-      ],
-      "65": [
-        "S-40"
-      ],
-      "80": [
-        "S-40"
-      ],
-      "100": [
-        "S-40"
-      ],
-      "150": [
-        "S-20",
-        "S-40"
-      ],
-      "200": [
-        "S-20",
-        "S-40"
-      ],
-      "250": [
-        "S-20"
-      ],
-      "300": [
-        "S-20"
-      ]
-    },
-    "thk_rules": []
-  },
-  "AA1E": {
-    "description": "Stainless Steel 304, 150#, RF",
-    "rating": "150#",
-    "base_material": "SS304",
-    "pipe_spec": "ASTM A312 TP304",
-    "design_temp_min": "-196",
-    "design_temp_max": "400",
-    "design_pressure": "20",
-    "corrosion_allowance": "0",
-    "default_weld_type": "GTAW",
-    "joint_type": "BW/SW",
-    "dn_threshold_bw": "50",
-    "flange_face": "RF",
-    "gasket_type": "Spiral Wound (SS304 inner ring)",
-    "bolt_material": "B8/8",
-    "pwht_required": false,
-    "nde_requirement": "PT 100%",
-    "default_material": "SS304",
-    "material_candidates": [
-      "SS304",
-      "SS316"
-    ],
-    "thk_candidates_by_dn": {
-      "15": [
-        "S-10S"
-      ],
-      "20": [
-        "S-10S"
-      ],
-      "25": [
-        "S-10S"
-      ],
-      "50": [
-        "S-10S"
-      ],
-      "80": [
-        "S-10S"
-      ],
-      "100": [
-        "S-10S"
-      ],
-      "150": [
-        "S-10S"
-      ],
-      "200": [
-        "S-10S"
-      ]
-    },
-    "thk_rules": []
-  },
-  "BA2B": {
-    "description": "Carbon Steel, 300#, RF",
-    "rating": "300#",
-    "base_material": "C.S",
-    "pipe_spec": "ASTM A106 Gr.B",
-    "design_temp_min": "-29",
-    "design_temp_max": "400",
-    "design_pressure": "50",
-    "corrosion_allowance": "3.0",
-    "default_weld_type": "SMAW",
-    "joint_type": "BW/SW",
-    "dn_threshold_bw": "50",
-    "flange_face": "RF",
-    "gasket_type": "Spiral Wound",
-    "bolt_material": "B7/2H",
-    "pwht_required": true,
-    "nde_requirement": "RT 10%",
-    "default_material": "C.S",
-    "material_candidates": [
-      "C.S",
-      "A106-B",
-      "A105"
-    ],
-    "thk_candidates_by_dn": {
-      "15": [
-        "S-80",
-        "S-160"
-      ],
-      "20": [
-        "S-80",
-        "S-160"
-      ],
-      "25": [
-        "S-80"
-      ],
-      "50": [
-        "S-40",
-        "S-80"
-      ],
-      "80": [
-        "S-40"
-      ],
-      "100": [
-        "S-40"
-      ],
-      "150": [
-        "S-40"
-      ],
-      "200": [
-        "S-20",
-        "S-40"
-      ]
-    },
-    "thk_rules": []
-  },
   "AA1B": {
     "description": "",
     "rating": "150#",
     "base_material": "C.S",
     "pipe_spec": "ASTM A106 Gr.B",
-    "design_temp_min": "-29",
+    "design_temp_min": "",
     "design_temp_max": "150",
     "design_pressure": "150",
     "corrosion_allowance": "1.5",
-    "default_weld_type": "GTAW",
+    "default_weld_type": "GTAW+SMAW",
     "joint_type": "BW/SW",
     "dn_threshold_bw": "",
     "flange_face": "RF",
@@ -189,10 +16,8 @@
     "bolt_material": "B7/2H",
     "pwht_required": false,
     "nde_requirement": "",
-    "default_material": "C.S",
-    "material_candidates": [
-      "A106"
-    ],
+    "default_material": "SS304",
+    "material_candidates": [],
     "thk_candidates_by_dn": {
       "15": [
         "S-80"
@@ -252,6 +77,479 @@
         "S-20"
       ]
     },
-    "thk_rules": []
+    "thk_rules": [],
+    "branch_table": {
+      "15": {
+        "15": "ETE"
+      },
+      "20": {
+        "15": "SOC",
+        "20": "ETE"
+      },
+      "25": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "ETE"
+      },
+      "32": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "ETE"
+      },
+      "40": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "ETE"
+      },
+      "50": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "TEE"
+      },
+      "65": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "TER",
+        "65": "TEE"
+      },
+      "80": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "TER",
+        "65": "TER",
+        "80": "TEE"
+      },
+      "100": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "TER",
+        "65": "TER",
+        "80": "TER",
+        "100": "TEE"
+      },
+      "125": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "TER",
+        "80": "TER",
+        "100": "TER",
+        "125": "TEE"
+      },
+      "150": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "TER",
+        "100": "TER",
+        "125": "TER",
+        "150": "TEE"
+      },
+      "200": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "TER",
+        "125": "TER",
+        "150": "TER",
+        "200": "TEE"
+      },
+      "250": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "TER",
+        "150": "TER",
+        "200": "TER",
+        "250": "TEE"
+      },
+      "300": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "TER",
+        "200": "TER",
+        "250": "TER",
+        "300": "TEE"
+      },
+      "350": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "RWE",
+        "200": "TER",
+        "250": "TER",
+        "300": "TER",
+        "350": "TEE"
+      },
+      "400": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "RWE",
+        "200": "TER",
+        "250": "TER",
+        "300": "TER",
+        "350": "TER",
+        "400": "TEE"
+      },
+      "450": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "RWE",
+        "200": "RWE",
+        "250": "TER",
+        "300": "TER",
+        "350": "TER",
+        "400": "TER",
+        "450": "TEE"
+      },
+      "500": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "RWE",
+        "200": "RWE",
+        "250": "TER",
+        "300": "TER",
+        "350": "TER",
+        "400": "TER",
+        "450": "TER",
+        "500": "TEE"
+      },
+      "600": {
+        "15": "SOC",
+        "20": "SOC",
+        "25": "SOC",
+        "32": "SOC",
+        "40": "SOC",
+        "50": "RWE",
+        "65": "RWE",
+        "80": "RWE",
+        "100": "RWE",
+        "125": "RWE",
+        "150": "RWE",
+        "200": "RWE",
+        "250": "RWE",
+        "300": "TER",
+        "350": "TER",
+        "400": "TER",
+        "450": "TER",
+        "500": "TER",
+        "600": "TEE"
+      }
+    }
+  },
+  "AA2B": {
+    "description": "",
+    "rating": "150#",
+    "base_material": "C.S",
+    "pipe_spec": "ASTM A106 Gr.B",
+    "design_temp_min": "0",
+    "design_temp_max": "150",
+    "design_pressure": "150",
+    "corrosion_allowance": "1.5",
+    "default_weld_type": "GTAW+SMAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "",
+    "flange_face": "RF",
+    "gasket_type": "PTFE Sheet",
+    "bolt_material": "B7/2H",
+    "pwht_required": false,
+    "nde_requirement": "",
+    "default_material": "C.S",
+    "material_candidates": [],
+    "thk_candidates_by_dn": {
+      "15": [
+        "S-80"
+      ],
+      "20": [
+        "S-80"
+      ],
+      "25": [
+        "S-80"
+      ],
+      "32": [
+        "S-80"
+      ],
+      "40": [
+        "S-80"
+      ],
+      "50": [
+        "S-40"
+      ],
+      "65": [
+        "S-40"
+      ],
+      "80": [
+        "S-40"
+      ],
+      "100": [
+        "S-40"
+      ],
+      "125": [
+        "S-40"
+      ],
+      "150": [
+        "S-40"
+      ],
+      "200": [
+        "S-40"
+      ],
+      "250": [
+        "S-30"
+      ],
+      "300": [
+        "S-30"
+      ],
+      "350": [
+        "S-30"
+      ],
+      "400": [
+        "S-30"
+      ],
+      "450": [
+        "S-30"
+      ],
+      "500": [
+        "S-20"
+      ],
+      "600": [
+        "S-20"
+      ]
+    },
+    "thk_rules": [],
+    "branch_table": {}
+  },
+  "AA4B": {
+    "description": "",
+    "rating": "150#",
+    "base_material": "C.S",
+    "pipe_spec": "ASTM A106 Gr.B",
+    "design_temp_min": "-29",
+    "design_temp_max": "325",
+    "design_pressure": "150",
+    "corrosion_allowance": "1.5",
+    "default_weld_type": "GTAW+SMAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "",
+    "flange_face": "RF",
+    "gasket_type": "Spiral Wound",
+    "bolt_material": "B7/2H",
+    "pwht_required": false,
+    "nde_requirement": "",
+    "default_material": "C.S",
+    "material_candidates": [],
+    "thk_candidates_by_dn": {
+      "15": [
+        "S-80"
+      ],
+      "20": [
+        "S-80"
+      ],
+      "25": [
+        "S-80"
+      ],
+      "32": [
+        "S-80"
+      ],
+      "40": [
+        "S-80"
+      ],
+      "50": [
+        "S-40"
+      ],
+      "65": [
+        "S-40"
+      ],
+      "80": [
+        "S-40"
+      ],
+      "100": [
+        "S-40"
+      ],
+      "125": [
+        "S-40"
+      ],
+      "150": [
+        "S-40"
+      ],
+      "200": [
+        "S-30"
+      ],
+      "250": [
+        "S-30"
+      ],
+      "300": [
+        "S-30"
+      ],
+      "350": [
+        "S-30"
+      ],
+      "400": [
+        "S-30"
+      ],
+      "450": [
+        "S-30"
+      ],
+      "500": [
+        "S-20"
+      ],
+      "600": [
+        "S-20"
+      ]
+    },
+    "thk_rules": [],
+    "branch_table": {}
+  },
+  "AA1E": {
+    "description": "",
+    "rating": "150#",
+    "base_material": "SS304",
+    "pipe_spec": "ASTM A312 TP304",
+    "design_temp_min": "-29",
+    "design_temp_max": "200",
+    "design_pressure": "150",
+    "corrosion_allowance": "1.5",
+    "default_weld_type": "GTAW+SMAW",
+    "joint_type": "BW/SW",
+    "dn_threshold_bw": "",
+    "flange_face": "RF",
+    "gasket_type": "PTFE Sheet",
+    "bolt_material": "B7/2H",
+    "pwht_required": false,
+    "nde_requirement": "",
+    "default_material": "SS304",
+    "material_candidates": [],
+    "thk_candidates_by_dn": {
+      "15": [
+        "S-40"
+      ],
+      "20": [
+        "S-40"
+      ],
+      "25": [
+        "S-40"
+      ],
+      "32": [
+        "S-40"
+      ],
+      "40": [
+        "S-40"
+      ],
+      "50": [
+        "S-10S"
+      ],
+      "65": [
+        "S-10S"
+      ],
+      "80": [
+        "S-10S"
+      ],
+      "100": [
+        "S-10S"
+      ],
+      "125": [
+        "S-10S"
+      ],
+      "150": [
+        "S-10S"
+      ],
+      "200": [
+        "S-10S"
+      ],
+      "250": [
+        "S-10S"
+      ],
+      "300": [
+        "S-10S"
+      ],
+      "350": [
+        "S-10S"
+      ],
+      "400": [
+        "S-10S"
+      ],
+      "450": [
+        "S-10S"
+      ],
+      "500": [
+        "S-10S"
+      ],
+      "600": [
+        "S-10S"
+      ]
+    },
+    "thk_rules": [],
+    "branch_table": {}
   }
 }
