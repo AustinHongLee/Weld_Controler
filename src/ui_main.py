@@ -17,6 +17,7 @@ from src.ui_weld_editor import WeldControlTab
 from src.ui_spec_rules import SpecRulesWidget
 from src.ui_welding_qual import WeldingQualWidget
 from src.ui_export import ExportWidget
+from src.theme_engine import load_theme, generate_qss
 
 
 class MainWindow(QMainWindow):
@@ -75,8 +76,18 @@ def launch_app(
     project_path: str,
     profile_path: str,
     rules_path: str,
+    *,
+    config_dir: str = "",
 ) -> None:
     app = QApplication(sys.argv)
+
+    # ── Apply theme ──────────────────────────────────
+    if config_dir:
+        theme = load_theme(config_dir)
+        qss = generate_qss(theme)
+        if qss:
+            app.setStyleSheet(qss)
+
     ctrl = AppController(project_path, profile_path, rules_path)
     win = MainWindow(ctrl)
     win.show()

@@ -91,15 +91,15 @@ class DragChip(QFrame):
         sub_font = QFont()
         sub_font.setPointSize(8)
         self.sub.setFont(sub_font)
-        self.sub.setStyleSheet("color: #888;")
+        self.sub.setStyleSheet("color: #9090a8;")
         lay.addWidget(self.sub)
 
     def _update_style(self, hover: bool) -> None:
-        bg = "#d0e8ff" if hover else "#e8f0fe"
+        bg = "#3d3d5c" if hover else "#2a2a3c"
         self.setStyleSheet(
             f"DragChip {{ background: {bg}; "
-            f"border: 2px solid #4a90d9; "
-            f"border-radius: 6px; }}"
+            f"border: 2px solid #7c6ff7; "
+            f"border-radius: 6px; color: #e0e0ee; }}"
         )
 
     def mousePressEvent(self, ev) -> None:
@@ -152,8 +152,8 @@ class ChipStrip(QFrame):
         self.setAcceptDrops(True)
         self.setMinimumHeight(60)
         self.setStyleSheet(
-            "ChipStrip { border: 2px dashed #aaa; "
-            "border-radius: 8px; background: #fafafa; }"
+            "ChipStrip { border: 2px dashed #4e4e6e; "
+            "border-radius: 8px; background: #252536; }"
         )
         self._layout = QHBoxLayout(self)
         self._layout.setContentsMargins(8, 6, 8, 6)
@@ -347,7 +347,7 @@ class ProfileTab(QWidget):
         self.token_label = QLabel()
         self.token_label.setStyleSheet(
             "font-size: 15px; font-family: monospace; "
-            "color: #333; padding: 4px;"
+            "color: #e0e0ee; padding: 4px;"
         )
         self.token_label.setWordWrap(True)
         layout.addWidget(self.token_label)
@@ -381,7 +381,7 @@ class ProfileTab(QWidget):
         self.result_label = QLabel()
         self.result_label.setStyleSheet(
             "font-size: 13px; padding: 4px; "
-            "background: #f0f8e8; border-radius: 4px;"
+            "background: #2a3c2a; color: #43d9a0; border-radius: 4px;"
         )
         self.result_label.setWordWrap(True)
         layout.addWidget(self.result_label)

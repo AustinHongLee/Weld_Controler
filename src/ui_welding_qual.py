@@ -266,7 +266,7 @@ class WeldingQualWidget(QWidget):
         )
         if ok:
             self.val_result.setStyleSheet(
-                "font-size: 13px; color: green;"
+                "font-size: 13px; color: #43d9a0;"
             )
             self.val_result.setText(
                 f"✓ WPS {wps_no} 在 PQR {pqr_no} 認證範圍內\n\n"
@@ -276,7 +276,7 @@ class WeldingQualWidget(QWidget):
             )
         else:
             self.val_result.setStyleSheet(
-                "font-size: 13px; color: red;"
+                "font-size: 13px; color: #f06070;"
             )
             self.val_result.setText(
                 "✗ 驗證失敗:\n\n" + "\n".join(
@@ -399,7 +399,7 @@ class _RecordPanel(QWidget):
         self.envelope_label = QLabel("")
         self.envelope_label.setWordWrap(True)
         self.envelope_label.setStyleSheet(
-            "color: #555; font-size: 12px; margin-top: 8px;"
+            "color: #9090a8; font-size: 12px; margin-top: 8px;"
         )
         rl.addWidget(self.envelope_label)
 

@@ -2,7 +2,7 @@
   "meta": {
     "project_name": "",
     "created_at": "2024-01-01T00:00:00+00:00",
-    "updated_at": "2026-02-24T15:22:05.159892+00:00",
+    "updated_at": "2026-02-25T15:01:02.494213+00:00",
     "parser_profile": "default"
   },
   "drawings": [
@@ -40,7 +40,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -49,7 +51,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -58,7 +62,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -67,7 +73,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -76,7 +84,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -85,7 +95,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -94,7 +106,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -103,7 +117,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -112,7 +128,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -121,7 +139,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -130,7 +150,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -139,7 +161,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -148,7 +172,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -157,7 +183,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -166,7 +194,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -175,7 +205,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -184,7 +216,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -193,7 +227,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -202,7 +238,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -211,7 +249,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -220,7 +260,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -229,7 +271,9 @@
           "dn": "50",
           "thk": "",
           "material": "C.S",
-          "weld_type": "GTAW+SMAW",
+          "weld_type": "BW/SW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         }
@@ -1110,6 +1154,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "GTAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1119,6 +1165,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "GTAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1128,6 +1176,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "GTAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1137,6 +1187,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "GTAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1146,6 +1198,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "GTAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         }
@@ -1276,6 +1330,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "SMAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1285,6 +1341,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "SMAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1294,6 +1352,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "SMAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1303,6 +1363,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "SMAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         },
@@ -1312,6 +1374,8 @@
           "thk": "",
           "material": "C.S",
           "weld_type": "SMAW",
+          "wps_no": "",
+          "welder_no": "",
           "shop_field": "S",
           "remark": ""
         }

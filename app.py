@@ -10,7 +10,8 @@ def main() -> None:
     project_path = os.path.join(root_dir, "data", "project.json")
     profile_path = os.path.join(root_dir, "config", "parser_profiles.json")
     rules_path = os.path.join(root_dir, "config", "spec_rules.json")
-    launch_app(project_path, profile_path, rules_path)
+    config_dir = os.path.join(root_dir, "config")
+    launch_app(project_path, profile_path, rules_path, config_dir=config_dir)
 
 
 if __name__ == "__main__":

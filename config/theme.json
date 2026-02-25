@@ -1,0 +1,65 @@
+{
+  "active_theme": "dark_modern",
+  "themes": {
+    "dark_modern": {
+      "base": {
+        "bg":           "#1e1e2e",
+        "bg_surface":   "#252536",
+        "bg_card":      "#2a2a3c",
+        "bg_hover":     "#33334a",
+        "bg_selected":  "#3d3d5c",
+        "border":       "#3e3e5c",
+        "border_light": "#4e4e6e",
+        "text":         "#e0e0ee",
+        "text_dim":     "#9090a8",
+        "text_heading": "#ffffff",
+        "shadow":       "rgba(0,0,0,0.3)"
+      },
+      "accent": {
+        "primary":      "#7c6ff7",
+        "primary_hover":"#9589ff",
+        "success":      "#43d9a0",
+        "warning":      "#f0c040",
+        "danger":       "#f06070",
+        "info":         "#60b0f0"
+      },
+      "tabs": {
+        "Drawing List":    "#7c6ff7",
+        "Weld Control":    "#43d9a0",
+        "Spec Rules 管理": "#f0c040",
+        "WPS/PQR 管理":    "#60b0f0",
+        "匯出 Excel":      "#f07060"
+      }
+    },
+    "light_modern": {
+      "base": {
+        "bg":           "#f5f5fa",
+        "bg_surface":   "#ffffff",
+        "bg_card":      "#ffffff",
+        "bg_hover":     "#ebebf5",
+        "bg_selected":  "#dcdcf0",
+        "border":       "#d0d0e0",
+        "border_light": "#e0e0ee",
+        "text":         "#2a2a3c",
+        "text_dim":     "#7070a0",
+        "text_heading": "#1a1a2e",
+        "shadow":       "rgba(0,0,0,0.08)"
+      },
+      "accent": {
+        "primary":      "#6055e0",
+        "primary_hover":"#7c6ff7",
+        "success":      "#2ebd88",
+        "warning":      "#d9a520",
+        "danger":       "#d04050",
+        "info":         "#4090d8"
+      },
+      "tabs": {
+        "Drawing List":    "#6055e0",
+        "Weld Control":    "#2ebd88",
+        "Spec Rules 管理": "#d9a520",
+        "WPS/PQR 管理":    "#4090d8",
+        "匯出 Excel":      "#d04050"
+      }
+    }
+  }
+}
