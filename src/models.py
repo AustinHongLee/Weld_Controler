@@ -76,6 +76,8 @@ WELD_FIELDS: List[tuple] = [
     ("thk",        "厚度"),
     ("material",   "材質"),
     ("weld_type",  "焊接型式"),
+    ("wps_no",     "WPS 編號"),
+    ("welder_no",  "焊工編號"),
     ("shop_field", "預製S/現場F"),
     ("remark",     "備註"),
 ]
@@ -91,6 +93,8 @@ class Weld:
     thk: str = ""
     material: str = ""
     weld_type: str = ""
+    wps_no: str = ""
+    welder_no: str = ""
     shop_field: str = "S"
     remark: str = ""
 

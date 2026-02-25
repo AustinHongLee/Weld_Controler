@@ -2,7 +2,7 @@
   "meta": {
     "project_name": "",
     "created_at": "2024-01-01T00:00:00+00:00",
-    "updated_at": "2026-02-24T15:12:33.258620+00:00",
+    "updated_at": "2026-02-24T15:22:05.159892+00:00",
     "parser_profile": "default"
   },
   "drawings": [
@@ -34,7 +34,206 @@
       "paint_color": "",
       "dwg_status": "",
       "revisions": [],
-      "welds": []
+      "welds": [
+        {
+          "weld_no": "1",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "2",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "3",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "4",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "5",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "6",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "7",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "8",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "9",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "10",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "11",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "12",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "13",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "14",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "15",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "16",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "17",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "18",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "19",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "20",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "21",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        },
+        {
+          "weld_no": "22",
+          "dn": "50",
+          "thk": "",
+          "material": "C.S",
+          "weld_type": "GTAW+SMAW",
+          "shop_field": "S",
+          "remark": ""
+        }
+      ]
     },
     {
       "series_no": "2",

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from src import parser, rules, storage
+from src import parser, rules, storage, welding_engine
 from src.models import (
     AUTO_PARSED_KEYS,
     Drawing,
@@ -38,6 +38,12 @@ class AppController:
         self.common_values_path = os.path.join(
             cfg_dir, "common_values.json"
         )
+        self.p_no_map_path = os.path.join(
+            cfg_dir, "p_no_map.json"
+        )
+        self.welding_reg_path = os.path.join(
+            cfg_dir, "welding_registry.json"
+        )
 
         raw = storage.ensure_project(project_path)
         self.project = Project.from_dict(raw)
@@ -50,6 +56,17 @@ class AppController:
         )
         self.common_values = rules.load_common_values(
             self.common_values_path
+        )
+
+        # Welding qualification
+        self.p_no_map = welding_engine.load_p_no_map(
+            self.p_no_map_path
+        )
+        self.welding_registry = welding_engine.load_welding_registry(
+            self.welding_reg_path
+        )
+        self.weld_engine = welding_engine.WeldingQualificationEngine(
+            p_no_map=self.p_no_map,
         )
 
         # Currently-selected drawing index (for weld editing)
@@ -251,8 +268,8 @@ class AppController:
             "dn": dw.dn,
             "material": dw.material,
             "thk": "",
-            "weld_type": rules.get_default_weld_type(
-                self.spec_rules, class_code
+            "weld_type": rules.get_joint_type(
+                self.spec_rules, class_code, dw.dn
             ),
             "shop_field": "S",
         }
@@ -344,3 +361,24 @@ class AppController:
         return export_excel.export_project(
             self.project, output_dir
         )
+
+    # ═════════════════════════════════════════════════
+    # Welding Qualification (WPS / PQR / Welder)
+    # ═════════════════════════════════════════════════
+    def save_welding_registry(self) -> None:
+        welding_engine.save_welding_registry(
+            self.welding_reg_path, self.welding_registry
+        )
+
+    def save_p_no_map(self, data: Dict[str, str]) -> None:
+        welding_engine.save_p_no_map(
+            self.p_no_map_path, data
+        )
+        self.p_no_map = data
+        self.weld_engine.p_no_map = data
+
+    def get_wps_list(self) -> List[str]:
+        return self.welding_registry.list_wps_nos()
+
+    def get_welder_list(self) -> List[str]:
+        return self.welding_registry.list_welder_nos()

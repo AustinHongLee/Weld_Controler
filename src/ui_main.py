@@ -15,6 +15,7 @@ from src.controller import AppController
 from src.ui_drawing_list import DrawingListTab
 from src.ui_weld_editor import WeldControlTab
 from src.ui_spec_rules import SpecRulesWidget
+from src.ui_welding_qual import WeldingQualWidget
 from src.ui_export import ExportWidget
 
 
@@ -53,7 +54,13 @@ class MainWindow(QMainWindow):
         )
         self.tabs.addTab(self.spec_tab, "Spec Rules 管理")
 
-        # ── Tab 4: Export ────────────────────────────────
+        # ── Tab 4: WPS/PQR/Welder ─────────────────────
+        self.welding_tab = WeldingQualWidget(
+            controller=self.ctrl
+        )
+        self.tabs.addTab(self.welding_tab, "WPS/PQR 管理")
+
+        # ── Tab 5: Export ────────────────────────────────
         self.export_tab = ExportWidget(controller=self.ctrl)
         self.tabs.addTab(self.export_tab, "匯出 Excel")
 
