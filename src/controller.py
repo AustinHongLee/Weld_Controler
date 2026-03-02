@@ -209,6 +209,13 @@ class AppController:
             self._apply_parsed(dw)
         self.save()
 
+    def add_empty_drawing(self) -> Drawing:
+        """Add an empty Drawing and return it."""
+        dw = Drawing()
+        self.project.drawings.append(dw)
+        self.save()
+        return dw
+
     def delete_drawings(self, indices: List[int]) -> None:
         """Delete drawings at the given indices."""
         for idx in sorted(indices, reverse=True):

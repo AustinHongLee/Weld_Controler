@@ -2,7 +2,7 @@
   "meta": {
     "project_name": "",
     "created_at": "2024-01-01T00:00:00+00:00",
-    "updated_at": "2026-02-25T15:01:02.494213+00:00",
+    "updated_at": "2026-02-25T15:23:07.991767+00:00",
     "parser_profile": "default"
   },
   "drawings": [
@@ -32,7 +32,7 @@
       "prefab_dwg": "",
       "equipment_no": "",
       "paint_color": "",
-      "dwg_status": "",
+      "dwg_status": "啟用",
       "revisions": [],
       "welds": [
         {
@@ -305,7 +305,7 @@
       "prefab_dwg": "",
       "equipment_no": "",
       "paint_color": "",
-      "dwg_status": "",
+      "dwg_status": "啟用",
       "revisions": [],
       "welds": []
     },
@@ -335,7 +335,7 @@
       "prefab_dwg": "",
       "equipment_no": "",
       "paint_color": "",
-      "dwg_status": "",
+      "dwg_status": "啟用",
       "revisions": [],
       "welds": []
     },
